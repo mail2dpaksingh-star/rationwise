@@ -1,0 +1,92 @@
+/* RationWise v2.5 — one customer-facing formulation workflow.
+   All prior scientific engines stay unchanged; this layer replaces presentation only. */
+[hidden] {display:none!important}
+:root{--rw-forest:#143629;--rw-forest2:#1e4a37;--rw-leaf:#a7d391;--rw-cream:#f6f8f5;--rw-border:#dde7db;--rw-ink:#153026;--rw-muted:#65746a}
+html{scroll-behavior:smooth}
+body{font-family:Inter,system-ui,-apple-system,'Segoe UI',sans-serif;background:#f6f8f5;color:var(--rw-ink);line-height:1.55;margin:0}
+.rw25-wide{width:min(1200px,calc(100% - 40px));margin-inline:auto}
+.rw25-header{position:relative;z-index:5;background:#fff;border-bottom:1px solid var(--rw-border)}
+.rw25-topline{display:flex;gap:25px;align-items:center;justify-content:space-between;min-height:78px}
+.rw25-brand{display:inline-flex;align-items:center;gap:11px;color:#143629;text-decoration:none;font-size:23px;line-height:1.02;font-weight:800;letter-spacing:-1.1px;white-space:nowrap}
+.rw25-brand small{display:block;letter-spacing:2.1px;font-size:9px;font-weight:700;margin-top:6px;color:#66806d}
+.rw25-lime{color:#538452}
+.rw25-mark{font-size:25px;letter-spacing:-1px;width:44px;height:44px;display:grid;place-items:center;border-radius:12px;background:#1f4936;color:white}
+.rw25-mark span{color:var(--rw-leaf);font-size:14px}
+.rw25-topline nav{display:flex;gap:22px;align-items:center}
+.rw25-topline nav a{color:#315342;font-size:14px;font-weight:650;text-decoration:none}
+.rw25-topline nav a:hover{color:#087337;text-decoration:underline}
+.rw25-header-cta{display:inline-block;padding:12px 18px;border-radius:10px;background:#214a34;color:#fff!important;text-decoration:none;font-weight:750;font-size:14px;white-space:nowrap}
+.rw25-hero{background:linear-gradient(115deg,#163426,#214431 66%,#335943);color:#fff;padding:61px 0 57px}
+.rw25-hero-inner{max-width:1200px}
+.rw25-eyebrow{font-size:12px;letter-spacing:2.1px;color:#a4cc96;font-weight:800}
+.rw25-hero h1{font-size:clamp(38px,5.5vw,63px);line-height:1.1;letter-spacing:-2.4px;font-weight:850;margin:20px 0 15px}
+.rw25-hero h1 em{font-style:normal;color:#c0dfac}
+.rw25-hero p{font-size:17px;max-width:770px;color:#e0eadf;line-height:1.8;margin:0}
+.rw25-hero-actions{display:flex;align-items:center;flex-wrap:wrap;gap:24px;margin-top:28px}
+.rw25-hero-actions>span{font-size:12px;font-weight:650;letter-spacing:.2px;color:#cadcca}
+.rw25-solid{background:#b6da99;color:#193b29;text-decoration:none;font-size:15px;font-weight:800;padding:14px 21px;border-radius:10px;display:flex;gap:25px;align-items:center}
+.rw25-safety{display:flex;align-items:flex-start;gap:14px;background:#fff7e5;border:1px solid #eddba7;border-radius:12px;padding:15px 17px;margin:24px 0;font-size:13.5px;color:#694f21;line-height:1.65}
+.rw25-safety>span:first-child{font-size:21px;color:#907132;line-height:1.2}
+.rw25-formulator{padding:24px 0 70px;background:#f6f8f5}
+.rw25-form-head h2{font-size:clamp(25px,3.5vw,34px);letter-spacing:-1.1px;color:#1d3728;margin:8px 0 3px}
+.rw25-form-head p{font-size:14px;color:#63756a;margin:0 0 24px;max-width:800px}
+.rw25-progress{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;background:#eaf0e8;padding:8px;border-radius:16px;margin-bottom:18px}
+.rw25-progress-button{display:flex;gap:10px;align-items:center;justify-content:center;background:transparent;border:1px solid transparent;color:#55725c;border-radius:11px;cursor:pointer;padding:12px 5px;font-size:14px;font-weight:700}
+.rw25-progress-button b{background:#d3e1d1;border-radius:50%;width:26px;height:26px;display:grid;place-items:center;font-size:12px}
+.rw25-progress-button.active{background:#fff;box-shadow:0 3px 11px #1439290b;border-color:#dfe8dc;color:#234b34}
+.rw25-progress-button.active b{background:#234932;color:#fff}
+.rw25-wizard{background:white;border-radius:18px;border:1px solid var(--rw-border);box-shadow:0 7px 28px #1f48330b;overflow:hidden}
+.rw25-step{padding:28px}
+.rw25-step-lead{font-size:14px;color:#66756a;margin-bottom:17px}
+.rw25-step-lead span{color:#297545;letter-spacing:1.2px;font-size:11px;font-weight:800;margin-right:8px}
+.rw25-step .prod-panel{background:#fff;box-shadow:none;border-radius:12px;border:1px solid #e3eae1;max-width:none!important;margin:0 0 17px;padding:22px}
+.rw25-step .prod-panel h3{font-size:20px;letter-spacing:-.5px;color:#193d29;margin-bottom:10px}
+.rw25-step .prod-panel .prod-hint,.rw25-step .prod-panel .hint{font-size:12px;color:#69786c}
+.rw25-step .prod-form{grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.rw25-step select,.rw25-step input{max-width:100%;box-sizing:border-box}
+.rw25-step .prod-table input{min-width:86px}
+.rw25-step .table-scroll{overflow:auto;max-width:100%;border:1px solid #e3ebe3;border-radius:8px}
+.rw25-step .prod-table{min-width:680px}
+.rw25-step button:not(.rw25-next):not(.rw25-back){cursor:pointer}
+.rw25-step-controls{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:22px 0 5px}
+.rw25-step-controls button{font:inherit;border:1px solid #bdd3be;background:white;padding:12px 22px;border-radius:10px;color:#20412b;font-weight:700;cursor:pointer}
+.rw25-step-controls .rw25-next{background:#255839;color:#fff;border-color:#255839;margin-left:auto}
+.rw25-step .prod-result{background:#173a2b;border-radius:13px;padding:17px 21px;max-width:none;min-height:unset;color:white;margin:18px 0 0;overflow:auto}
+.rw25-step .prod-result *{max-width:100%}
+.rw25-step .prod-result table{min-width:540px}
+.rw25-step .prod-result .table-scroll{border-color:#4b6c56}
+.rw25-advanced,.rw25-account-shell{margin-top:20px;background:#fff;border:1px solid var(--rw-border);border-radius:13px;overflow:hidden}
+.rw25-advanced>summary,.rw25-account-shell>summary{cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:15px;padding:19px 22px;font-weight:780;color:#284b35;list-style:none}
+.rw25-advanced>summary:after,.rw25-account-shell>summary:after{content:'⌄';margin-left:auto;font-size:23px;color:#607c63}
+.rw25-advanced[open]>summary:after,.rw25-account-shell[open]>summary:after{content:'⌃'}
+.rw25-advanced>summary::-webkit-details-marker,.rw25-account-shell>summary::-webkit-details-marker{display:none}
+.rw25-advanced>summary small,.rw25-account-shell>summary small{font-size:12px;color:#698073;font-weight:400}
+.rw25-advanced-inner{padding:18px 22px 22px;background:#fbfdfb}
+.rw25-advanced-inner>.prod-panel{margin:14px 0;border-radius:11px;padding:20px}
+.rw25-advanced-tool{border:1px solid #e3eae4;background:white;border-radius:12px;margin:12px 0;padding:17px}
+.rw25-advanced-tool summary{cursor:pointer;font-weight:700}
+.rw25-embedded{padding:15px 0 20px!important}
+.rw25-embedded .layout{width:100%;max-width:100%;padding:0}
+.rw25-account-shell{margin-bottom:55px}
+.rw25-account-shell>.rw25-embedded{padding:0 22px!important}
+.rw25-account-shell .section-head{margin-top:20px}
+.rw25-embedded .hero,.rw25-embedded .topbar{display:none}
+.rw25-legacy-hidden{display:none!important}
+.rw25-footer{border-top:1px solid #dfe9de;background:#fff;color:#6a796f;font-size:12px;padding:25px 0}
+.rw25-footer-inner{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap}
+.rw25-footer strong{font-size:19px;color:#1e4f34;letter-spacing:-.9px}.rw25-footer strong span{color:#79a865}
+.rw25-footer p{margin:0}.rw25-footer a{color:#527e5a;margin-left:12px}
+@media(max-width:760px){.rw25-wide{width:min(100% - 24px,1200px)}.rw25-topline{min-height:68px;gap:8px}.rw25-brand{font-size:20px}.rw25-topline nav{gap:12px}.rw25-topline nav a{font-size:12px}.rw25-header-cta{display:none}.rw25-hero{padding:38px 0}.rw25-hero h1{letter-spacing:-1.4px}.rw25-hero p{font-size:15px}.rw25-progress{gap:3px;padding:5px}.rw25-progress-button{flex-direction:column;gap:4px;font-size:10px;padding:9px 2px}.rw25-progress-button b{width:23px;height:23px}.rw25-step{padding:15px}.rw25-step .prod-panel{padding:14px}.rw25-step .prod-form{grid-template-columns:1fr}.rw25-advanced>summary,.rw25-account-shell>summary{align-items:flex-start;flex-direction:column;gap:2px}.rw25-advanced-inner{padding:12px}.rw25-footer-inner{justify-content:flex-start}}
+@media(max-width:420px){.rw25-topline nav{gap:10px}.rw25-topline nav a{font-size:11px}.rw25-brand small{font-size:7px}.rw25-mark{width:36px;height:36px}}
+/* The original calculator grid used .production as a styling scope. Preserve its
+   accessible form styling after moving it into the new guided layout. */
+.rw25-step .prod-form label{display:flex;flex-direction:column;gap:6px;min-width:0}
+.rw25-step .prod-form input,.rw25-step .prod-form select{width:100%;min-height:42px;background:#fff;border:1px solid #d8e4d9;border-radius:8px;padding:8px 10px}
+.rw25-step .prod-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.rw25-step .prod-result{position:static;background:#fff;color:#1a3b2b;padding:0;border:1px solid #dce7d9}
+.rw25-step .prod-result .result-head{background:#153d2c;color:#b2d3b8}
+.rw25-step-lead{margin-bottom:17px}
+@media(max-width:650px){.rw25-step .prod-form{grid-template-columns:1fr}}
+
+.rw25-step .table-scroll{scrollbar-color:#719b7c #edf3ec}
+.rw25-step #prodIngredients{min-width:980px}
