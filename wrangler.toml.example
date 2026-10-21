@@ -1,0 +1,5 @@
+# Example only. Import an existing Pages project configuration before deployment.
+name = "rationwise"
+pages_build_output_dir = "./dist"
+compatibility_date = "2026-10-20"
+# NEVER put secret keys in this file; use Dashboard > Variables and Secrets.

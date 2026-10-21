@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RationWise 2.4 | Global Feed Formulation & Accounts</title>
+<meta name="description" content="Global breed and stage profile management with local feed prices and source-backed, least-cost feed formulation tools; scientific feeding review still required.">
+<link rel="stylesheet" href="style.css"></head>
+<body>
+<header class="topbar"><div class="layout topinner"><a class="brand" href="#top" aria-label="RationWise home"><span class="brand-icon">R<span>✳</span></span><span>Ration<span class="green">Wise</span><small>FORMULATION LAB</small></span></a><nav><a href="#account">Accounts & plans</a><a href="#global21">Global farms · NEW</a><a href="#scientific20">v2.0 models</a><a href="#production">Live calculator</a><a href="#pilot">Science pilot</a><a href="#calculator">Research lab</a><a href="#governance">Data governance</a><a href="#about">How it works</a></nav><span class="version">v2.4 · INTERNATIONAL BETA</span></div></header>
+<main id="top">
+<section class="hero"><div class="layout hero-grid"><div><div class="eyebrow"><span class="live-dot"></span> INTERNATIONAL · SCIENCE-FIRST FORMULATION SOFTWARE</div>
+<h1>Better feed decisions.<br><em>Built on better data.</em></h1>
+<p>Compare ingredient economics across markets, formulate on a precise as-fed and dry-matter basis, and trace every record back to its source and approval status.</p>
+<div class="heroactions"><a class="button primary" href="#production">Open live-data calculator <span>↗</span></a><a class="button ghost" href="#governance">Explore our safeguards</a></div>
+<div class="herofoot"><span>🌎 11 animal groups</span><span>⚖️ Correct moisture accounting</span><span>🔒 Audit-first ingredient records</span></div></div>
+<aside class="hero-preview" aria-label="Data integrity overview"><div class="preview-top"><span>SCIENTIFIC INTEGRITY</span><span class="preview-chip">DEMO ENVIRONMENT</span></div><div class="preview-glyph">◉</div><h2>Every number has a basis.</h2><p>100 kg as-fed is not 100 kg dry matter. RationWise calculates both transparently.</p><div class="preview-math"><span>as-fed mass</span><strong>×</strong><span>dry matter fraction</span><strong>=</strong><span>dry matter mass</span></div><div class="preview-bottom">NO UNVERIFIED FEEDING RECOMMENDATIONS <b>↗</b></div></aside>
+</div></section>
+<div class="layout"><div class="notice" role="alert"><span class="notice-icon">!</span><div><strong>Two workspaces: actual user-entered calculations and synthetic demonstrations.</strong> The live-data calculator solves with your own inputs and documented external review claims; RationWise does not authenticate scientific approvals or certify feed safety. Synthetic example ingredient values are fictional; the separate historical poultry reference preview contains sourced but incomplete legacy values. Obtain professional nutritional, safety and regional regulatory review before using any result for feeding.</div></div></div>
+
+
+
+
+<section id="account" class="workspace production"><div class="layout">
+ <div class="section-head"><div><div class="mini-title">V2.2–V2.4 · OPTIONAL SECURE ACCOUNT SERVICE</div><h2>Farmer accounts and affordable subscriptions</h2><p>Create an account to store private farm profiles and formulation JSON. Feed calculations remain research/beta tools requiring qualified independent review.</p></div><span class="sandbox-tag">PAYMENT ACTIVATION REQUIRES VERIFIED MERCHANT SETUP</span></div>
+ <div class="notice"><span class="notice-icon">!</span><div><strong>No nutritional certification is included with any plan.</strong> International payment availability, taxes and local feed requirements depend on the user's country. Do not enter payment cards on this site: all payment entry takes place on Stripe-hosted pages. Pricing below is proposed, and checkout appears only after configuration.</div></div>
+ <div class="rw24-status" id="rw24Status" role="status" aria-live="polite">Checking account service…</div>
+ <div id="rw24Login" class="prod-panel rw24-box"><h3>Sign up or sign in</h3><div class="prod-form"><label>Email address<input id="rw24Email" type="email" autocomplete="email" maxlength="250"></label><label>Password (12+ characters)<input id="rw24Password" type="password" autocomplete="current-password" minlength="12"></label></div><div class="prod-buttons"><button id="rw24Signup" type="button">Create account</button><button id="rw24Signin" type="button" class="primary">Sign in</button><button id="rw24Reset" type="button">Forgot password?</button></div><p class="prod-hint">Account creation requires email verification and a configured Supabase project. Never share your password with support.</p></div>
+ <div id="rw24Signed" class="prod-panel rw24-box" hidden><h3>Your account</h3><p><strong id="rw24Who"></strong> · <span id="rw24Plan"></span></p><div class="prod-buttons"><button id="rw24Signout" type="button">Sign out</button><button id="rw24Portal" type="button">Manage subscription / cancel</button><button id="rw24UpdatePassword" type="button">Change password</button></div></div>
+ <div id="rw24Features" class="rw24-cloud" hidden>
+  <div class="prod-panel"><h3>Private saved farm profiles</h3><p>Save the current data from the Global farms editor above (up to your account's plan quota).</p><button id="rw24SaveFarm" type="button" class="primary">Save current farm profile</button><div id="rw24Farms" class="rw24-records"></div></div>
+  <div class="prod-panel"><h3>Private formulation archives</h3><p>Export a JSON record using the existing calculator, then upload that file here to save it privately. Download later and import it back into the calculator.</p><label>Saved RationWise JSON file<input type="file" id="rw24FormulaFile" accept=".json,application/json"></label><button type="button" id="rw24SaveFormula">Save formulation JSON</button><div id="rw24Formulas" class="rw24-records"></div></div>
+ </div>
+ <h3>Suggested plans</h3><div class="rw24-prices"><div class="prod-panel"><h4>Free</h4><strong>$0</strong><p>1 saved farm, 2 saved formulations</p><small>Calculations stay available in the public beta.</small></div>
+ <div class="prod-panel"><h4>Farmer · monthly</h4><strong>$2.99/month</strong><p>20 farms, 100 records</p><button type="button" data-rw-plan="farmer_monthly" disabled>Choose monthly</button></div>
+ <div class="prod-panel"><h4>Farmer · annual</h4><strong>$24/year</strong><p>20 farms, 100 records</p><button type="button" data-rw-plan="farmer_annual" disabled>Choose annual</button></div>
+ <div class="prod-panel"><h4>Nutritionist</h4><strong>$7.99/month</strong><p>200 farms, 1,000 records</p><button type="button" data-rw-plan="professional_monthly" disabled>Choose professional</button></div>
+ <div class="prod-panel"><h4>Feed mill</h4><strong>$19.99/month</strong><p>1,000 farms, 5,000 records</p><button type="button" data-rw-plan="feedmill_monthly" disabled>Choose feed mill</button></div></div>
+ <p class="prod-hint" id="rw24BillingMode">Billing configuration pending.</p>
+ <p class="prod-hint">These displayed USD amounts are <b>indicative</b>. Actual Stripe Checkout prices/tax must be checked before payment. <a href="privacy.html">Privacy Policy</a> · <a href="terms.html">Terms</a> · Support contact to be configured before public launch</p>
+</div></section>
+
+<section id="global21" class="workspace production g21-workspace"><div class="layout">
+ <div class="section-head"><div><div class="mini-title">V2.1 · GLOBAL FARM & BREED CONTEXT</div><h2>Create an animal profile for your region</h2><p>Start with the animal, breed or strain, production stage, and actual measurements. Then transfer the context to the live least-cost calculator.</p></div><span class="sandbox-tag">PROFILE WORKFLOW · NOT AUTOMATIC FEEDING ADVICE</span></div>
+ <div class="notice"><span class="notice-icon">!</span><div><strong>Breed-specific requirements are not yet preloaded.</strong> These details help select and assess scientific reference profiles. Breed selection alone does not generate nutritional targets. Local profile exports remain on your device; Secure accounts and Stripe subscriptions are configurable in the v2.4 account workbench; until connected by the owner, local JSON export remains available.</div></div>
+ <div class="g21-grid"><div class="prod-panel"><h3>01 · Location and herd / flock / stock</h3><div class="prod-form">
+  <label>Farm or batch label (optional)<input id="g21Farm" maxlength="240" placeholder="e.g. Farm A · Flock 2"></label>
+  <label>Country<select id="g21Country"></select></label>
+  <label id="g21CountryOtherLabel" hidden>Other country ISO-2 code<input id="g21CountryOther" maxlength="2" placeholder="e.g. TZ" aria-label="Other country ISO-2 code"></label>
+  <label>Region / province<input id="g21Region" maxlength="240" placeholder="e.g. Punjab, CA, Province 1"></label>
+  <label>Local currency (ISO-3)<input id="g21Currency" maxlength="3" placeholder="USD"></label>
+  <label>Species and production stage<select id="g21Stage"></select></label>
+  <label>Breed, crossbreed, stock or strain<input id="g21Breed" list="g21BreedOptions" maxlength="240" placeholder="Choose or enter exact breed"><datalist id="g21BreedOptions"></datalist></label>
+  <label>Number of animals (optional)<input id="g21Count" type="number" step="1" min="1" placeholder="Optional"></label>
+  <label>Genetics/stock notes (optional)<input id="g21Notes" maxlength="240" placeholder="Genetic line, hatchery, lactation parity"></label>
+ </div><p class="prod-hint" id="g21BreedHint"></p></div>
+ <div class="prod-panel"><h3>02 · Actual animal and production measurements</h3><p class="prod-hint">Use only applicable fields. No default body weight, growth, milk yield, or feed intake is invented.</p>
+ <div class="prod-form" id="g21Measurements"></div><div class="g21-status warning" role="status" aria-live="polite" id="g21Status"></div>
+ <details class="g21-source"><summary>Optional: check the scope of a scientific requirement source</summary>
+ <p class="prod-hint">This only checks exact animal-stage, breed and country metadata. It does not authenticate a publication, reviewer, target values, or usage rights.</p>
+ <div class="prod-form">
+ <label>Reference ID (citation, own approved protocol)<input id="g21RefId" placeholder="Scientific source identifier"></label>
+ <label>Breed / strain studied in reference<input id="g21RefBreed" placeholder="Exact breed or strain as documented"></label>
+ <label>Population country ISO-2<input id="g21RefCountry" maxlength="2" placeholder="e.g. NP"></label>
+ <label>External review documentation (operator claim)<select id="g21RefStatus"><option value="draft">Not reviewed / draft</option><option value="externally_reviewed">Externally reviewed — documentation claimed</option></select></label>
+ <label>Commercial use-rights documentation (operator claim)<select id="g21RefRights"><option value="unknown">Unknown</option><option value="restricted">Restricted</option><option value="commercial_permitted">Permission documented — operator claim</option></select></label>
+ </div><div id="g21RefCheck" class="g21-status warning" aria-live="polite"></div>
+ </details>
+ <div class="prod-buttons g21-actions"><button id="g21Apply" type="button" class="primary">Use profile in formulation calculator ↓</button><button id="g21Export" type="button">Download profile JSON</button><label>Import farm profile JSON<input id="g21Import" type="file" accept=".json,application/json"></label><button id="g21Reset" type="button">Clear profile</button></div>
+ <p class="prod-hint"><strong>Privacy:</strong> This form runs on your device without creating an account. Download a JSON file to save it. Avoid personal or confidential information on shared devices. Secure cloud storage is available only after the account backend is deployed and configured.</p>
+ </div></div>
+ </div></section>
+
+<section id="scientific20" class="workspace production"><div class="layout">
+ <div class="section-head"><div><div class="mini-title">V2.0 · PRIORITY SCIENTIFIC MODEL MODULES</div><h2>Extended nutrient formulation workbench</h2><p>Broiler chicken, grower pig and lactating dairy cow · up to 19 selected nutrients per stage · real user-entered reference values only.</p></div><span class="sandbox-tag">CALCULATIONS ENABLED · INDEPENDENT NUTRITION REVIEW REQUIRED</span></div>
+ <div class="notice"><span class="notice-icon">!</span><div><strong>Numerical requirements are intentionally blank.</strong> Enter nutrient constraints only from sources you have rights to use, and ingredient composition from supported laboratory analyses. Calculations are not feeding approval. Other 34 stage templates remain in the original calculator below.</div></div>
+ <div class="prod-panel s20-panel"><h3>01 · Species, production stage and market</h3><div class="prod-form">
+ <label>Verified species/stage identity<select id="s20Model"><option value="chicken_broiler">Broiler grower chicken</option><option value="pig_grower">Grower pig</option><option value="cattle_dairy">Lactating dairy cattle — complete ration</option></select></label>
+ <label>Batch (kg as-fed)<input id="s20Batch" type="number" min="0.001" step="any" value="1000"></label>
+ <label>Country code (ISO-2)<input id="s20Country" value="US" maxlength="2"></label><label>Currency (ISO-3)<input id="s20Currency" value="USD" maxlength="3"></label>
+ <label>Age/stage or range<input id="s20Age" placeholder="e.g. age and weight band"></label><label>Genetics/breed<input id="s20Breed" placeholder="Line, breed or strain"></label>
+ <label>Production / intake assumptions<input id="s20Production" placeholder="Milk yield, intake or growth context"></label>
+ </div><p class="prod-hint" id="s20ModelHint"></p></div>
+ <div class="prod-panel s20-panel"><h3>02 · Evidence, commercial rights and external review</h3><div class="prod-form">
+ <label>Scientific citation<input id="s20Citation" placeholder="Full citation, DOI or owned protocol"></label>
+ <label>Exact source location<input id="s20Locator" placeholder="Table / page / equation"></label>
+ <label>Commercial use rights<select id="s20Rights"><option value="unknown">Unknown / not cleared</option><option value="restricted">Restricted</option><option value="commercial_permitted">Permission documented (operator claim)</option></select></label>
+ <label>Usage permission evidence<input id="s20RightsProof" placeholder="License number or rights letter"></label>
+ <label>Review status<select id="s20Review"><option value="draft">Draft / no external review</option><option value="externally_reviewed">External review documented (operator claim)</option></select></label>
+ <label>Reviewer name<input id="s20Reviewer" placeholder="Independent qualified nutritionist"></label><label>Reviewer evidence ID<input id="s20Evidence" placeholder="Signed review document reference"></label>
+ </div></div>
+ <div class="prod-panel s20-panel"><h3>03 · Enter nutrient targets, independently established</h3><p class="prod-hint">Targets are stored on a dry-matter basis (unit per kg DM), except when deliberately set to as-fed in imported JSON. Enter an exact document locator for each constraint. Blank = not optimized. Values are never autofilled.</p>
+ <div class="table-scroll s20-tablewrap"><table class="pilot-table s20-table"><thead><tr><th>Nutrient</th><th>Units and basis</th><th>Direction</th><th>Reviewed target</th><th>Source locator</th></tr></thead><tbody id="s20Targets"></tbody></table></div></div>
+ <div class="prod-panel s20-panel"><h3>04 · Ingredient analyses, local prices and inclusion limits</h3><p class="prod-hint">All ingredient analytes are measured per kg dry matter; prices are per kg as-fed in your selected currency. Never enter unknown laboratory values as zero. A failed safety screen blocks optimization.</p>
+ <div class="table-scroll s20-tablewrap"><table class="pilot-table s20-table"><thead><tr><th>Ingredient name</th><th>DM % AF</th><th>Price/kg AF</th><th>Min % AF</th><th>Max % AF</th><th>Safety</th><th>Lab / CoA</th><th>Local quote</th><th>Manage</th></tr></thead><tbody id="s20IngredientRows"></tbody></table></div>
+ <button id="s20Add" type="button">+ Add ingredient</button>
+ <h4>Assays: select a nutrient to enter its values for every ingredient</h4>
+ <label class="s20-picker">Nutrient / exact unit <select id="s20Analyte"></select></label>
+ <div class="table-scroll s20-tablewrap"><table class="pilot-table s20-table"><thead><tr><th>Ingredient</th><th>Assay result</th><th>Measurement unit and basis</th></tr></thead><tbody id="s20AssayRows"></tbody></table></div>
+ </div>
+ <div class="prod-panel s20-panel"><h3>05 · Audit, calculate and export</h3><div class="prod-buttons"><button id="s20AuditBtn" type="button">Recheck data</button><button id="s20Go" type="button" class="primary" disabled>Calculate least-cost blend</button><button id="s20Download" type="button">Save panel JSON</button><label class="s20-picker">Import v2.0 panel JSON <input id="s20Import" type="file" accept=".json,application/json"></label></div>
+ <div id="s20Audit" aria-live="polite"></div><div id="s20Result" aria-live="polite">Enter real input values to calculate.</div>
+ <p class="prod-hint">The audit documents gaps; it does not check reviewer credentials, rights authenticity, contamination risks, premix potency, mixing quality, complete animal requirements, or regional feed law. Numerical results are never automatically certified as feeding-ready.</p></div>
+ </div></section>
+
+<section id="production" class="workspace production"><div class="layout">
+<div class="section-head"><div><div class="mini-title">v1.9 / SCIENTIFIC REVIEW & EVIDENCE</div><h2>Live calculations for 11 animal groups and 37 life-stage templates</h2><p>Import or enter source-backed reference anchors to estimate selected stage targets, then optimize with your own ingredient analyses and local prices. No synthetic numbers enter live calculations.</p></div><span class="sandbox-tag">EXTERNAL REVIEW REQUIRED · NOT CERTIFIED BY RATIONWISE</span></div>
+<div class="app-grid"><div class="form-main">
+<div class="prod-panel"><h3>1 · Species, market and production batch</h3><div class="prod-form">
+<label>Animal and stage model<select id="prodSpecies">
+<optgroup label="Cattle"><option value="cattle_dairy">Dairy cow · milk production</option><option value="cattle_heifer">Dairy cattle · growing heifer</option><option value="cattle_gestation">Dairy cattle · gestating/dry</option><option value="cattle_beef">Beef cattle · grower</option></optgroup>
+<optgroup label="Buffalo"><option value="buffalo_dairy">Buffalo · milk production</option><option value="buffalo_grower">Buffalo · growing</option><option value="buffalo_gestation">Buffalo · gestating</option></optgroup>
+<optgroup label="Sheep"><option value="sheep_grower">Sheep · grower</option><option value="sheep_gestation">Sheep · gestating</option><option value="sheep_lactation">Sheep · lactating</option></optgroup>
+<optgroup label="Goat"><option value="goat_lactation">Goat · lactating</option><option value="goat_grower">Goat · growing</option><option value="goat_gestation">Goat · gestating</option></optgroup>
+<optgroup label="Chicken"><option value="chicken">Broiler · grower (legacy)</option><option value="chicken_broiler_starter">Broiler · starter</option><option value="chicken_broiler_finisher">Broiler · finisher</option><option value="chicken_layer">Chicken · laying hen</option><option value="chicken_pullet">Chicken · pullet grower</option><option value="chicken_breeder">Chicken · broiler breeder</option></optgroup>
+<optgroup label="Turkey"><option value="turkey_grower">Turkey · grower</option><option value="turkey_breeder">Turkey · breeder flock</option><option value="turkey_layer">Turkey · laying hen (non-breeder)</option></optgroup>
+<optgroup label="Duck"><option value="duck_grower">Duck · grower</option><option value="duck_breeder">Duck · breeder / laying bird</option></optgroup>
+<optgroup label="Goose"><option value="goose_grower">Goose · grower</option><option value="goose_breeder">Goose · breeder</option></optgroup>
+<optgroup label="Quail"><option value="quail_grower">Quail · grower</option><option value="quail_breeder">Quail · breeder / laying bird</option></optgroup>
+<optgroup label="Fish"><option value="fish_tilapia">Tilapia · grower (warm-water)</option><option value="fish_catfish">Catfish · grower (warm-water)</option><option value="fish_carp">Carp · grower (warm-water)</option><option value="fish_trout">Rainbow trout · grower (cold-water)</option></optgroup>
+<optgroup label="Pigs"><option value="pig">Pig · grower (legacy)</option><option value="pig_finisher">Pig · finisher</option><option value="pig_gestation">Sow · gestating</option><option value="pig_lactation">Sow · lactating</option><option value="pig_breeder">Boar · breeding</option></optgroup>
+</select></label>
+<label>Stage selected<input id="prodStage" placeholder="Stage name" readonly aria-readonly="true"></label>
+<label>Breed / exact species / genetic line<input id="prodBreed" maxlength="200" placeholder="e.g. Japanese quail, Pekin duck, rainbow trout"></label>
+<label>Age, body weight and production context<input id="prodAnimalContext" maxlength="300" placeholder="e.g. 12 weeks, 45 kg, lactating / gestation day"></label>
+<label>Batch size, kg as-fed<input id="prodBatch" type="number" min="0.1" step="any" value="1000"></label>
+<label>Country, ISO-2<input id="prodCountry" maxlength="2" value="US"></label>
+<label>Currency, ISO-3<input id="prodCurrency" maxlength="3" value="USD"></label>
+<label>Price quoted per<select id="prodPriceUnit"><option value="kg">kilogram as-fed</option><option value="tonne">metric tonne, 1000 kg</option><option value="bag25">25 kg bag</option><option value="bag50">50 kg bag</option><option value="bag100">100 kg bag</option></select></label>
+</div><p class="prod-hint">Currency is a label only; there is no foreign exchange conversion. Breed, age, weight and production details are recorded for review but DO NOT automatically adjust numeric requirements. Changing the stage clears current nutrient and ingredient inputs. <strong>Eleven animal groups (cattle, buffalo, sheep, goats, chickens, turkeys, ducks, geese, quail, fish and pigs). Targets start blank, except where a user elects to copy three explicitly labeled historical poultry-reference preview values. The stage fields are not complete feeding specifications.</strong></p><p class="prod-context" id="prodModelInfo" aria-live="polite"></p></div>
+<div class="prod-panel" id="requirements17"><h3>2 · Automatic nutrient requirement estimator <span class="sandbox-tag">v1.7 NEW</span></h3>
+<p class="prod-hint"><strong>Reference grids contain no bundled numerical anchors.</strong> Generate nutrient targets by interpolating documented, species/stage-specific reference points. Enter measurements for the animal, import a licensed reference grid, or create/edit your own. This interpolator never extrapolates beyond measured reference anchors; it does not predict feed intake or replace independent nutritional review.</p>
+<div id="reqUnsupported" class="quality-output" hidden>This species/stage still requires manually entered targets. Automatic interpolation is being developed for additional stages.</div>
+<div id="reqSupported">
+<div class="prod-form req-controls"><label>Primary physiological variable<select id="reqAxis1"></select></label><label>Optional second variable<select id="reqAxis2"></select></label><label>Reference grid ID<input id="reqId" placeholder="e.g. FARM-PROFILE-001"></label></div>
+<div class="prod-form req-contexts" id="reqContexts"></div>
+<div class="prod-form req-meta-fields">
+<label>Scientific reference / own study ID<input id="reqSource" placeholder="Citation / study / validated protocol identifier"></label>
+<label>Applicability / breed / region<input id="reqPopulation" placeholder="Exact breed, genotype or studied population"></label>
+<label>Model method / interpretation<input id="reqMethod" value="Piecewise-linear interpolation between source-backed requirement anchor points"></label>
+<label>Review state<select id="reqReviewState"><option value="draft">Draft — preview only</option><option value="externally_reviewed">Externally reviewed (operator claim)</option></select></label>
+<label>Reviewer name<input id="reqReviewer" placeholder="External qualified nutritionist"></label>
+<label>Review evidence ID<input id="reqEvidence" placeholder="Signed report or review document ID"></label>
+<label>Commercial-use rights<select id="reqRights"><option value="unknown">Unknown — preview only</option><option value="restricted">Restricted — preview only</option><option value="commercial_permitted">Commercial permitted (operator claim)</option></select></label>
+<label>Rights proof identifier<input id="reqRightsProof" placeholder="Owned research, license, or written permission reference"></label></div>
+<div class="prod-buttons"><button id="reqCreate" type="button">+ Create editable reference grid</button><label>Import reference JSON<input type="file" id="reqImport" accept=".json,application/json"></label><button id="reqDownload" type="button">Download my reference grid JSON</button></div>
+<div id="reqGrid" class="req-grid"></div>
+<div class="prod-buttons"><button id="reqPreview" type="button">Calculate interpolated targets</button><button id="reqApply" type="button" class="primary">Apply reviewed targets to live calculator →</button></div>
+<div id="reqMessage" class="req-message" role="status"></div><div id="reqResults" class="req-results" aria-live="polite"></div>
+<p class="prod-hint">The stage template represents only eight selected constraints. Interpolated concentrations are not a complete diet requirement model; true adequacy also needs intake, micronutrients, digestibility, hazards, regulations and independent review. Claims entered in a local browser are not verified authentication.</p>
+</div></div>
+<div class="prod-panel" id="reference18"><h3>New in v1.8 · Scientific reference library <span class="sandbox-tag">HISTORICAL · INCOMPLETE</span></h3>
+<p class="prod-hint">Try selected values from a <a href="https://directives.nrcs.usda.gov/sites/default/files2/1719834722/Nutrient%20Management%20190-04%2C%20Feed%20and%20Animal%20Management%20for%20Poultry.pdf" target="_blank" rel="noopener noreferrer">2020 USDA NRCS poultry technical note</a>, itself based on older NRC 1994 recommendations. The historical reference is included to demonstrate transparent sourcing, conversion and gap analysis, <b>not as a modern commercial diet prescription</b>. Commercial rights for the underlying adapted NRC data have not been cleared.</p>
+<div class="prod-form"><label id="ref18AgeWrap">Broiler age (days)<input id="ref18Age" type="number" min="0" max="55.99" step="any" placeholder="e.g. 25"></label><label id="ref18IntakeWrap" hidden>Individual laying-hen feed intake (g/day)<input id="ref18Intake" type="number" min="80" max="120" step="any" placeholder="80–120"></label></div>
+<div class="prod-buttons"><button type="button" id="ref18Preview">Preview historical source values</button><button type="button" id="ref18Apply">Copy 3 partial values to target table</button><button type="button" id="ref18Download">Export source and gaps (JSON)</button></div>
+<div id="ref18Status" class="ref18-status" role="status"></div><div id="ref18Results" aria-live="polite"></div>
+<p class="prod-hint">Only broiler starter/grower/finisher and laying-hen historical examples are preloaded. All other animal/stage requirements remain blank rather than inheriting unrelated species numbers. Missing energy, digestible amino acids, micronutrients and real feed-safety checks must be addressed by a qualified professional. Source values apply to a 90% DM diet and are converted to a DM basis before comparison.</p></div>
+<div class="prod-panel rv19" id="review19"><h3>New in v1.9 · Source-traceable nutritionist review dossiers <span class="sandbox-tag">ALL 37 STAGES</span></h3>
+<p class="prod-hint">Create an editable review dossier for each animal and stage. Audit the eight nutrient targets for exact stage match, units, documentary rights, reviewer claims, and outstanding feed-safety checks. <strong>This is not a professional review or approval service:</strong> no credentials, signatures, permissions or completeness are authenticated here.</p>
+<div id="rv19Forms">
+<div class="prod-form"><label>Unique profile ID<input id="rv19Id" placeholder="e.g. FARM-POULTRY-2026-001"></label><label>Profile revision<input id="rv19Revision" type="number" min="1" step="1" value="1"></label>
+<label>Breed / strain (used if main species context is blank)<input id="rv19Breed" placeholder="Breed, genetic line, stocking class"></label><label>Applicable country / region<input id="rv19Region" placeholder="e.g. Nepal, Chitwan district"></label>
+<label>Production conditions (fallback)<input id="rv19Context" placeholder="Age, body weight, milk or egg production, management"></label>
+<label>Scientific paper, book, lab study or profile citation<input id="rv19Citation" placeholder="Detailed citation or qualified-study identifier"></label>
+<label>Exact source table, page or equation<input id="rv19Locator" placeholder="e.g. Table 4, row A / equation 2"></label>
+<label>How source values were interpreted<input id="rv19Method" placeholder="Dry matter basis, energy system, applicability"></label>
+<label>Commercial data reuse rights<select id="rv19Rights"><option value="unknown">Unknown — do not commercially deploy</option><option value="restricted">Restricted</option><option value="commercial_permitted">Permission documented (operator claim)</option></select></label>
+<label>Rights ownership or license document<input id="rv19RightsProof" placeholder="License or original data ownership evidence ID"></label>
+<label>External specialist review status<select id="rv19ReviewStatus"><option value="draft">Draft · not reviewed</option><option value="documented_external_review">External review documented (operator claim)</option></select></label>
+<label>Reviewer full name<input id="rv19Reviewer" placeholder="External professional"></label>
+<label>Reviewer professional qualification<input id="rv19Qualification" placeholder="Credential, species focus, professional role"></label>
+<label>Signed reviewer document ID<input id="rv19Evidence" placeholder="Evidence document / approval letter reference"></label>
+<label>Review date<input id="rv19Date" type="date"></label></div>
+<h4>Additional scientific and release-evidence checks</h4><div id="rv19SafetyRows" class="rv19-safety"></div>
+</div>
+<div class="prod-buttons"><button type="button" id="rv19AuditBtn">Audit current target set</button><button type="button" id="rv19Download">Download review dossier (JSON)</button><button type="button" id="rv19Blank">Download stage-specific blank</button><label>Import review dossier<input type="file" id="rv19Import" accept=".json,application/json"></label><button type="button" id="rv19Apply" disabled>Apply imported, fully documented targets</button></div>
+<p class="prod-hint">A completed audit means only that the entered evidence fields pass structural checks. The 8 selected constraints are <strong>not</strong> a complete nutrient, safety or intake model. Data is handled locally in your browser. For regulatory use, implement server-side identity, signature, independent review, audit and licensing verification.</p>
+<div id="rv19Status" class="req-message" role="status"></div><div id="rv19Audit" class="rv19-audit" aria-live="polite"></div>
+</div>
+<div class="prod-panel"><h3>3 · Enter or inspect nutrient targets</h3><p class="prod-hint">All cells start blank: no invented requirements. Nutrient field selection is a modeling scaffold, <b>not</b> proof of a complete or safe diet. Min/max and dry-matter/as-fed basis are editable. Values must come from your qualified nutritionist, not from the sample pilot.</p>
+<div class="table-scroll"><table class="prod-table"><thead><tr><th>Nutrient</th><th>Direction</th><th>Target</th><th>Basis</th></tr></thead><tbody id="prodTargets"></tbody></table></div></div>
+<div class="prod-panel"><h3>4 · Ingredient analyses and local quotations</h3><p class="prod-hint">Report verified or suitably derived ingredient nutrient figures on the <b>dry-matter basis</b>; moisture as % of as-fed ingredient; quote prices on selected purchase unit. Enter evidence and rights proof for each row. Unknown nutrient measurements must not be entered as zero.</p>
+<div class="table-scroll"><table class="prod-table"><thead><tr id="prodCols"></tr></thead><tbody id="prodIngredients"></tbody></table></div><div class="prod-buttons"><button id="prodAdd" type="button">+ Add ingredient</button><button type="button" id="prodTemplate">Download blank ingredient CSV</button><label>Import ingredient CSV<input type="file" id="prodImportCSV" accept=".csv,text/csv"></label></div><p class="prod-hint">CSV columns must match the selected stage. Import replaces the current ingredient rows. Missing nutrient values are never filled with zero. Use rights/analysis references for every ingredient; do not upload copyrighted reference tables without permission.</p>
+</div>
+<div class="prod-panel"><h3>5 · Import analytical laboratory evidence</h3><p class="prod-hint">Use a <b>long-format lab CSV</b> with one row per ingredient × analyte. Report dry_matter first as percent of as-fed mass, then other analytes with their explicit basis (% / g/kg / mg/kg, or MJ/kg / kcal/kg for energy). Each row needs a sample date, lab/method, evidence ID and use-rights category. Conversions are checked and original values are retained in the editable JSON record. <b>No published database values are bundled.</b></p>
+<div class="prod-buttons"><button id="prodLabTemplate" type="button">Download laboratory assay CSV template</button><label>Import laboratory assay CSV<input id="prodLabImport" type="file" accept=".csv,text/csv"></label></div><p id="prodImportMessage" class="prod-hint" role="status">A laboratory import replaces the ingredient table and never fills unreported nutrients with zero. You must still supply your own local prices and inclusion bounds.</p></div>
+<div class="prod-panel"><h3>5 · Feed safety and scientific readiness</h3><p class="prod-hint">Each ingredient has a new hazard/suitability screening field and document identifier in its table row. Mark a pass only if you have supporting test results and local species-specific checks. This preflight identifies known gaps but does not certify animal nutrition or regulatory compliance. <b>Calculations remain usable while feeding/manufacturing release stays separate.</b></p>
+<div class="prod-buttons"><button id="prodSafetyCheck" type="button">Run scientific readiness preflight</button><button id="prodSafetyExport" type="button">Export readiness JSON</button></div>
+<div id="prodSafetyOutput" class="quality-output" role="status">No scientific readiness check run yet.</div></div>
+<div class="prod-panel"><h3>6 · External review and evidence identifiers</h3><div class="prod-form">
+<label>External reviewer name<input id="prodReviewer" placeholder="Qualified professional"></label>
+<label>External review evidence / document ID<input id="prodEvidence" placeholder="Signed document reference"></label>
+<label>Stage-requirement scientific source<input id="prodRequirementSource" placeholder="Reference or own validated profile"></label>
+<label>Stage requirement usage-rights proof<input id="prodRequirementRights" placeholder="Ownership or license record"></label>
+<label>Local market price provenance<input id="prodPriceSource" placeholder="Supplier quote / observed prices"></label>
+</div><label class="prod-attest"><input type="checkbox" id="prodAttest"><span>I confirm this is a genuine, non-synthetic dataset with appropriate use rights and external qualified scientific review. I understand this browser does not verify reviewer identity or certify nutritional adequacy, feed safety or manufacturing compliance.</span></label>
+<div class="prod-buttons"><button class="primary" type="button" id="prodCalculate">Calculate live-data formulation →</button><button type="button" id="prodSave">Save workspace JSON</button><label>Load saved workspace JSON<input id="prodLoad" type="file" accept=".json,application/json"></label><button type="button" id="prodReset">Clear inputs</button></div></div>
+</div><aside class="prod-result" aria-live="polite"><div class="result-head"><span>PRODUCTION-MODE NUMERICAL RESULTS</span><span>↗</span></div><div id="prodOutput"><div class="result-empty">Enter user data to calculate.</div></div></aside></div>
+</div></section>
+
+<section id="pilot" class="layout workspace sprint2">
+<div class="section-head"><div><div class="mini-title">SPRINT 02 / INTERNATIONAL NUTRITION DATA MODEL</div><h2>Species-specific pilot sandbox</h2><p>Separate scientific ingredient composition from local market price quotes. Eight illustrative targets per stage with full traceability.</p></div><span class="sandbox-tag">ALL NUMBERS SYNTHETIC · DRAFT</span></div>
+<div class="app-grid"><div class="form-main">
+<article class="panel"><div class="panel-heading"><div><div class="panel-step">MARKET CONTEXT</div><h3>Enter local prices — no implied exchange rates</h3></div><button type="button" class="text-button" id="pilotReset">↻ Reset sandbox</button></div>
+<div class="fields three"><label>Animal / demonstration stage<select id="pilotProfile" aria-label="Select animal stage"><option value="demo_broiler_grower">Chicken · broiler grower</option><option value="demo_pig_grower">Pig · grower pig</option></select></label><label>Quick example market<select id="pilotMarketPreset"><option value="US/USD">United States · USD</option><option value="IN/INR">India · INR</option><option value="NP/NPR">Nepal · NPR</option><option value="/">Custom (manual quotes)</option></select></label>
+<label>Country (ISO 2)<input id="pilotCountry" type="text" maxlength="2" value="US" aria-label="Country code ISO-2"></label>
+<label>Currency (ISO 3)<input id="pilotCurrency" type="text" maxlength="3" value="USD" aria-label="Currency code ISO-3"></label></div>
+<div class="fields" style="margin-top:14px"><label>Batch mass, kg as-fed<input id="pilotBatchKg" type="number" value="1000" min="0.1" step="any"></label></div>
+<p class="hint">Sample US / India / Nepal prices are unrelated fictional examples, not actual market prices or currency exchange rates. For a new country enter each price explicitly in that country's currency.</p>
+</article>
+<article class="panel"><div class="panel-heading"><div><div class="panel-step">UNVALIDATED PRODUCTION-STAGE PROFILE</div><h3><span id="pilotStageTitle">Broiler grower</span> mathematical targets</h3></div><span class="sandbox-tag">Draft profile</span></div>
+<div class="table-scroll"><table class="pilot-table" aria-label="Synthetic stage requirements"><thead><tr><th>Nutrient</th><th>Limit</th><th>Synthetic mathematical target</th></tr></thead><tbody id="pilotTargets"></tbody></table></div>
+<p class="hint">Requirement source: <strong id="pilotRequirementSource">SYNTHETIC-STAGE-FIXTURE</strong>. Profiles are invented, not feeding recommendations. NRC (2012) is a swine validation reference, not a source of these numbers.</p></article>
+<article class="panel ingredient-panel"><div class="panel-heading"><div><div class="panel-step">INDEPENDENT RECORD VERSIONS</div><h3>Ingredients, laboratory basis & market quotes</h3><p class="subtle" id="pilotQuoteCaption"></p></div></div>
+<div class="table-scroll"><table class="pilot-table" aria-label="Separate scientific records and local quotes"><thead><tr><th>Ingredient / analysis revision</th><th>DM % AF</th><th>Stage energy MJ/kg DM</th><th>Stage lysine % DM</th><th>Local quote</th><th>Quote unit</th><th>Evidence</th></tr></thead><tbody id="pilotQuotes"></tbody></table></div>
+<div class="table-foot">Edit composition to revise the science record; edit quote to revise only the price record. Both changes are local and remain unapproved.</div>
+</article>
+<div class="actionstrip"><button class="button primary" type="button" id="pilotRun">Calculate synthetic stage scenario ↗</button><span>Never use for feeding, manufacturing, selling feed or dosing animals.</span></div>
+</div><aside class="results" aria-live="polite"><div class="result-head"><span>SPRINT 2 PILOT RESULTS</span><span class="res-icon">↗</span></div><div id="pilotOutput"><div class="result-empty">Preparing illustrative scenario…</div></div></aside></div></section>
+<section id="calculator" class="layout workspace"><div class="section-head"><div><div class="mini-title">01 / FORMULATION WORKSPACE</div><h2>Seven-species mathematical sandbox</h2><p>Prices are per kilogram as-fed; nutrients are expressed on dry matter. Enter targets you choose yourself.</p></div><span class="sandbox-tag">SANDBOX ONLY</span></div>
+<div class="app-grid"><div class="form-main">
+<article class="panel"><div class="panel-heading"><div><div class="panel-step">STEP 01</div><h3>Choose an animal group</h3></div><span class="subtle">Click to switch formulation context</span></div><div id="animalGrid" class="animals" aria-label="Animal group selection"></div><div class="group-caption" id="groupCaption"></div></article>
+<article class="panel"><div class="panel-heading"><div><div class="panel-step">STEP 02</div><h3>Set your market & batch</h3></div><span class="subtle">No automatic FX conversion</span></div>
+<div class="fields three"><label>Currency code <select id="currency"><option value="USD">USD · US Dollar</option><option value="INR">INR · Indian Rupee</option><option value="NPR">NPR · Nepalese Rupee</option><option value="BDT">BDT · Bangladeshi Taka</option><option value="PKR">PKR · Pakistani Rupee</option><option value="EUR">EUR · Euro</option><option value="GBP">GBP · British Pound</option><option value="KES">KES · Kenyan Shilling</option><option value="NGN">NGN · Nigerian Naira</option><option value="IDR">IDR · Indonesian Rupiah</option><option value="PHP">PHP · Philippine Peso</option><option value="AUD">AUD · Australian Dollar</option><option value="BRL">BRL · Brazilian Real</option><option value="ZAR">ZAR · South African Rand</option></select></label>
+<label>Batch size <div class="unit-input"><input id="batchKg" type="number" min="0.1" max="10000000" value="1000" step="any"><span>kg as-fed</span></div></label>
+<label>Price entry unit <select id="priceUnit"><option value="kg">per kg as-fed</option><option value="tonne">per metric tonne (1,000 kg)</option><option value="bag25">per 25 kg bag</option><option value="bag50">per 50 kg bag</option><option value="bag100">per 100 kg bag</option></select></label></div>
+<p class="hint" id="priceHint">Enter local prices in a single currency. Changing the currency label does not convert prices.</p></article>
+<article class="panel"><div class="panel-heading"><div><div class="panel-step">STEP 03</div><h3>Define demonstration targets</h3></div><span class="subtle">These are not feeding standards</span></div>
+<div class="target-grid"><div class="target-card"><div class="target-name">Crude protein</div><div class="target-control"><span>≥</span><input type="number" id="cpMin" min="0" max="100" step="any" value="14"><span>%</span></div><label class="small">Minimum concentration <select id="cpBasis"><option value="dm">of dry matter</option><option value="as_fed">of as-fed mix</option></select></label></div>
+<div class="target-card"><div class="target-name">Crude fiber</div><div class="target-control"><span>≤</span><input type="number" id="fiberMax" min="0" max="100" step="any" value="30"><span>%</span></div><label class="small">Maximum concentration <select id="fiberBasis"><option value="dm">of dry matter</option><option value="as_fed">of as-fed mix</option></select></label></div></div><p class="hint">Only two illustrative constraints are active in this sprint. Calcium and phosphorus are reported but not nutritionally optimized by default.</p></article>
+<article class="panel ingredient-panel"><div class="panel-heading"><div><div class="panel-step">STEP 04</div><h3>Ingredient workspace</h3><p class="subtle">Every active record is labeled synthetic, unapproved and demo-only.</p></div><button class="text-button" type="button" id="resetBtn">↻ Reset</button></div>
+<div class="table-scroll"><table class="ing-table" aria-label="Demonstration ingredients"><thead><tr><th>Use</th><th>Ingredient & approval</th><th id="priceHead">Price / kg AF</th><th>DM %</th><th>CP % DM</th><th>Fiber % DM</th><th>Min % AF</th><th>Max % AF</th><th>Evidence</th></tr></thead><tbody id="ingredientBody"></tbody></table></div>
+<div class="table-foot"><span id="countText"></span><span>Changes create an audited local draft · no browser-side approval</span></div>
+</article>
+<div class="actionstrip"><button class="button primary" id="runBtn" type="button">Calculate least-cost blend →</button><span>Numerical solution only · no animal requirements embedded</span></div>
+</div>
+<aside class="results" aria-live="polite"><div class="result-head"><span>OPTIMIZATION SUMMARY</span><span class="res-icon">↗</span></div><div id="output"><div class="result-empty">Set your inputs and calculate an illustrative blend.</div></div></aside>
+</div></section>
+<section id="governance" class="governance"><div class="layout"><div class="section-head"><div><div class="mini-title">02 / QUALITY CONTROL</div><h2>Designed for scientific accountability</h2><p>Evidence, approval and ingredient rights are required fields — not optional footnotes.</p></div></div>
+<div class="guard-grid"><article><div class="guard-icon">⌁</div><h3>Explicit nutrient basis</h3><p>All stored ingredient nutrients have a declared dry-matter basis. The solver converts before calculating as-fed mass and cost.</p></article><article><div class="guard-icon">≋</div><h3>Controlled source records</h3><p>Each ingredient contains a source identifier, rights status, version, review state and dated audit events.</p></article><article><div class="guard-icon">⊘</div><h3>Production gate</h3><p>Drafts and synthetic demo records are blocked from production-mode solving. Browser UI is not a security boundary for real deployment.</p></article></div></div></section>
+<section id="about" class="layout explainer"><div class="section-head"><div><div class="mini-title">03 / UNDER THE HOOD</div><h2>Precision in every kilogram</h2></div></div><div class="explain-grid"><div class="equation"><span>AS-FED TO DRY MATTER</span><div>kg DM = kg AF × (DM% ÷ 100)</div><p>For example: 10 kg of a 30% DM ingredient provides 3 kg of dry matter.</p></div><div class="equation"><span>NUTRIENT CONCENTRATION</span><div>% DM = 100 × nutrient kg ÷ total kg DM</div><p>A blended nutrient average must be weighted by actual dry-matter kilograms.</p></div><div class="equation"><span>LOCAL ECONOMICS</span><div>cost = Σ(kg AF × local price / kg AF)</div><p>Prices are not adjusted for shipping, processing, losses, taxes, or FX.</p></div></div></section>
+</main><footer class="footer"><div class="layout footerinner"><span class="brand footer-brand">Ration<span class="green">Wise</span></span><span>v2.4 / Global farm profiles, optional secure accounts and subscriptions • 11 animal groups / 37 stages • research prototype • synthetic demo ingredients</span><span>International by design. Scientific review before deployment.</span></div></footer>
+<dialog id="auditDialog"><div class="modal-head"><div><div class="mini-title">SCIENTIFIC RECORD TRACE</div><h3 id="auditTitle"></h3></div><button id="closeDialog" class="close" type="button" aria-label="Close">×</button></div><div id="auditContent"></div></dialog>
+<script src="solver.js"></script><script src="governance.js"></script><script src="units.js"></script><script src="catalog.js"></script><script src="engine.js"></script><script src="app.js"></script>
+<dialog id="pilotRecordDialog"><div class="modal-head"><div><div class="mini-title">SEPARATE ANALYSIS AND PRICE TRACE</div><h3 id="pilotRecordName"></h3></div><button id="pilotCloseRecord" class="close" type="button" aria-label="Close">×</button></div><div id="pilotRecordDetails"></div></dialog>
+<script src="science2.js"></script><script src="stages.js"></script><script src="engine2.js"></script><script src="pilot2.js"></script>
+<script src="quality4.js"></script><script src="review19.js"></script><script src="requirements17.js"></script><script src="reference18.js"></script><script src="operational.js"></script><script src="requirement-ui17.js"></script><script src="reference-ui18.js"></script><script src="review-ui19.js"></script>
+<script src="scientific20.js"></script><script src="scientific-ui20.js"></script><script src="global21.js"></script><script src="global-ui21.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script><script src="account24.js"></script></body></html>
