@@ -67,8 +67,8 @@ function calculate(){
  <div class="mix-title">Optimized quantities</div>${r.rows.map(x=>`<div class="mix-row"><span>${esc(x.name)}</span><b>${fmt(x.kgAsFed,2)} kg AF · ${fmt(x.kgDM,2)} kg DM (${fmt(x.sharePctAF,2)}%)</b></div>`).join('')}
  <div class="result-warning"><strong>Math result — not an animal-feeding certification.</strong>${esc(r.warnings.join(' '))} Review entries are supplied by the user and not independently authenticated.</div>
  <div class="result-actions"><button type="button" id="prodExport">Download calculation CSV</button><button type="button" id="prodJSON">Save records JSON</button></div></div>`;
- $('prodExport').addEventListener('click',()=>download('RationWise_v1.6_user_data_calculation.csv',csvReport(r,inputs),'text/csv;charset=utf-8'));
- $('prodJSON').addEventListener('click',()=>download('RationWise_v1.6_user_data_records.json',JSON.stringify({schema:'rationwise-1.6',inputs,analyticalProvenance:ingredients.map(({name,labMeta,lineage,hazardStatus,hazardEvidence})=>({name,labMeta,lineage,hazardStatus,hazardEvidence})),readiness:Q.assessReadiness({ingredients,profile:inputs.profile,result:r})},null,2),'application/json'));
+ $('prodExport').addEventListener('click',()=>download('RationWise_v2.5_user_data_calculation.csv',csvReport(r,inputs),'text/csv;charset=utf-8'));
+ $('prodJSON').addEventListener('click',()=>download('RationWise_v2.5_user_data_records.json',JSON.stringify({schema:'rationwise-1.6',inputs,analyticalProvenance:ingredients.map(({name,labMeta,libraryMeta,lineage,hazardStatus,hazardEvidence})=>({name,labMeta,libraryMeta,lineage,hazardStatus,hazardEvidence})),readiness:Q.assessReadiness({ingredients,profile:inputs.profile,result:r})},null,2),'application/json'));
  }catch(e){last=null;showError(e.message||String(e));}
 }
 function csvField(v){let s=String(v??'');if(/^[=+@\-\t\r]/.test(s))s="'"+s;return '"'+s.replaceAll('"','""')+'"';}
@@ -76,7 +76,7 @@ function csvReport(r,inp){const z=[['RationWise v1.7 USER-ENTERED DATA -- NOT IN
  for(const v of r.rows)z.push([v.name,inp.analyses.find(x=>x.id===v.analysisId)?.source.referenceId,v.kgAsFed,v.kgDM,v.sharePctAF,v.pricePerKgAsFed,v.cost]);z.push([],['Nutrient','direction','target','achieved','unit','basis']);for(const v of r.checks)z.push([S.NUTRIENTS[v.key].name,v.mode,v.value,v.achieved,v.unit,v.basis]);z.push([],['WARNING','Review and feeding safety were NOT independently verified by RationWise']);return z.map(row=>row.map(csvField).join(',')).join('\r\n');}
 function download(name,content,type){const blob=new Blob([content],{type}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 function saveTemplate(){let data;try{data=makeRecords();}catch(_){data=null;}const p={schema:'rationwise-1.7-workspace',species:$('prodSpecies').value,stage:$('prodStage').value,country:$('prodCountry').value,currency:$('prodCurrency').value,batch:$('prodBatch').value,unit:$('prodPriceUnit').value,
- breed:$('prodBreed').value,animalContext:$('prodAnimalContext').value,reviewer:$('prodReviewer').value,evidence:$('prodEvidence').value,source:$('prodRequirementSource').value,rights:$('prodRequirementRights').value,priceSource:$('prodPriceSource').value,targets,ingredients,requirementGrid:window.RationRequirementUI17?.exportState()||null};download('RationWise_v1.7_workspace.json',JSON.stringify(p,null,2),'application/json');}
+ breed:$('prodBreed').value,animalContext:$('prodAnimalContext').value,reviewer:$('prodReviewer').value,evidence:$('prodEvidence').value,source:$('prodRequirementSource').value,rights:$('prodRequirementRights').value,priceSource:$('prodPriceSource').value,targets,ingredients,requirementGrid:window.RationRequirementUI17?.exportState()||null};download('RationWise_v2.5_workspace.json',JSON.stringify(p,null,2),'application/json');}
 function loadFile(file){if(!file)return;if(file.size>2e6){showError('File must be smaller than 2MB');return;}file.text().then(raw=>{
  const p=JSON.parse(raw),prior=p.schema==='rationwise-1.3-workspace';
  const selectStage=prior?(p.species==='chicken'?'chicken':p.species==='pig'?'pig':null):p.species;
@@ -89,7 +89,7 @@ function loadFile(file){if(!file)return;if(file.size>2e6){showError('File must b
 /* CSV import is deliberately explicit and opt-in; no inferred 0 values. */
 function ingredientHeaders(){return ['name','analysisRef','rightsRef','dm','price','min','max',...STAGES[$('prodSpecies').value].keys];}
 function csvEscape(v){return '"'+String(v??'').replaceAll('"','""')+'"';}
-function downloadCsvTemplate(){const h=ingredientHeaders();download('RationWise_v1.6_'+$('prodSpecies').value+'_blank_ingredients.csv',[h.map(csvEscape).join(','),h.map(()=>csvEscape('')).join(',')].join('\r\n'),'text/csv;charset=utf-8');}
+function downloadCsvTemplate(){const h=ingredientHeaders();download('RationWise_v2.5_'+$('prodSpecies').value+'_blank_ingredients.csv',[h.map(csvEscape).join(','),h.map(()=>csvEscape('')).join(',')].join('\r\n'),'text/csv;charset=utf-8');}
 function parseCsv(s){
  const rows=[];let row=[],field='',quoted=false;const t=s.replace(/^\uFEFF/,'');
  for(let i=0;i<t.length;i++){const c=t[i];if(quoted){if(c==='"'&&t[i+1]==='"'){field+='"';i++;}else if(c==='"')quoted=false;else field+=c;}
@@ -130,12 +130,16 @@ function updatePreflight(){
  const panel=$('prodSafetyOutput');if(!panel)return;
  const profile=last?.inputs?.profile||{targets:targets.map(t=>({key:t.key}))};
  const report=Q.assessReadiness({ingredients,profile,result:last?.r,controls:{authenticatedReviewer:false,regionRegulatoryReview:false,premixAndMicronutrientReview:false,manufacturingQA:false}});
+ // Draft data must remain a separate scientific-release blocker even when
+ // the user has performed a mathematically feasible optimization.
+ const draftCount=ingredients.filter(a=>Object.values(a.lineage||{}).some(x=>x?.status==='UNVERIFIED_DRAFT_REFERENCE')).length;
+ if(draftCount)report.issues.push({severity:'block',code:'UNVERIFIED_DRAFT_REFERENCE',message:draftCount+' ingredient(s) contain copied owner-draft numbers; replace them with licensed and independently reviewed analyses before any feeding release.'});
  const blocks=report.issues.filter(i=>i.severity==='block'),warn=report.issues.filter(i=>i.severity==='warning');
  panel.innerHTML=`<strong>Not authorized for direct feeding or manufacture</strong><p>${blocks.length} outstanding release blockers · ${warn.length} evidence warnings. This local preflight cannot authenticate reviewers or ensure nutrient adequacy.</p><div class="quality-list">${blocks.slice(0,14).map(i=>`<div><b>${esc(i.code)}</b>${esc(i.ingredient?i.ingredient+': ':'')}${esc(i.message)}</div>`).join('')}${blocks.length>14?`<div>...and ${blocks.length-14} additional blockers (download full report).</div>`:''}</div>`;
  return report;
 }
-function downloadSafetyReport(){const report=updatePreflight();download('RationWise_v1.6_scientific_readiness.json',JSON.stringify({version:'1.6.0',date:today(),stage:$('prodSpecies').value,country:$('prodCountry').value,calculationStatus:last?.r?.status||'not_run',report},null,2),'application/json');}
-$('prodLabTemplate').addEventListener('click',()=>download('RationWise_v1.6_laboratory_assays_template.csv',Q.labCsvTemplate(),'text/csv;charset=utf-8'));
+function downloadSafetyReport(){const report=updatePreflight();download('RationWise_v2.5_scientific_readiness.json',JSON.stringify({version:'1.6.0',date:today(),stage:$('prodSpecies').value,country:$('prodCountry').value,calculationStatus:last?.r?.status||'not_run',report},null,2),'application/json');}
+$('prodLabTemplate').addEventListener('click',()=>download('RationWise_v2.5_laboratory_assays_template.csv',Q.labCsvTemplate(),'text/csv;charset=utf-8'));
 $('prodLabImport').addEventListener('change',e=>{importLabCsv(e.target.files?.[0]);e.target.value='';});
 $('prodSafetyCheck').addEventListener('click',updatePreflight);
 $('prodSafetyExport').addEventListener('click',downloadSafetyReport);
@@ -151,5 +155,33 @@ $('prodSave').addEventListener('click',saveTemplate);
 $('prodLoad').addEventListener('change',e=>loadFile(e.target.files?.[0]));
 $('prodReset').addEventListener('click',()=>{for(const id of ['prodBreed','prodAnimalContext','prodReviewer','prodEvidence','prodRequirementSource','prodRequirementRights','prodPriceSource'])$(id).value='';$('prodAttest').checked=false;resetStage();});
 for(const id of ['prodBreed','prodAnimalContext','prodCountry','prodCurrency','prodBatch','prodPriceUnit','prodReviewer','prodEvidence','prodRequirementSource','prodRequirementRights','prodPriceSource','prodAttest'])$(id).addEventListener('change',clear);
+
+// Reference-library bridge: does NOT mark draft values as laboratory tests, licensed,
+// reviewed, or suitable for feeding. Numeric copying is explicitly opt-in.
+window.RationIngredientBridge=Object.freeze({
+ getStage(){const d=STAGES[$('prodSpecies').value];return {group:d?.group,keys:d?.keys||[],model:$('prodSpecies').value};},
+ addFromLibrary(id,{copyDraft=false}={}){
+  const record=window.RationIngredientLibraryData?.entries?.find(x=>x.id===id);
+  if(!record)return {ok:false,error:'Ingredient reference not found.'};
+  const d=STAGES[$('prodSpecies').value];
+  if(!d||!record.groups.includes(d.group))return {ok:false,error:'This reference is not compatible with the selected animal group.'};
+  let row=ingredients.findIndex(x=>!x.name.trim());
+  if(row<0){if(ingredients.length>=60)return {ok:false,error:'Maximum 60 ingredients per formulation.'};ingredients.push(blank());row=ingredients.length-1;}
+  const a=blank();a.name=record.name;
+  // This tag is kept in exported workspaces, for traceability only.
+  a.libraryMeta={referenceId:record.id,document:record.source.document,table:record.source.table,attribution:record.source.attribution,
+   basis:record.source.basis,rights:record.source.rights,scientificReview:'unreviewed',notALaboratoryRecord:true};
+  let copied=0;
+  if(copyDraft&&record.autoEligible&&record.source.basis==='dry_matter'){
+   if(Number.isFinite(record.dryMatterPctAsFed))a.dm=String(record.dryMatterPctAsFed);
+   for(const k of d.keys){const v=record.valuesDM[k];if(typeof v==='number'&&Number.isFinite(v)&&v>=0){a.nutrients[k]=String(v);a.lineage[k]={source:record.id,
+    status:'UNVERIFIED_DRAFT_REFERENCE',table:record.source.table,notMeasured:true};copied++;}}
+  }
+  // Deliberately leave price, CoA, permissions, reviewer and hazard evidence blank.
+  ingredients[row]=a;paint();clear();updatePreflight();
+  return {ok:true,copied,missing:d.keys.filter(k=>a.nutrients[k]==null).length};
+ }
+});
+
 resetStage();
 })();
