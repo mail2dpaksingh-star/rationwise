@@ -160,6 +160,30 @@ for(const id of ['prodBreed','prodAnimalContext','prodCountry','prodCurrency','p
 // reviewed, or suitable for feeding. Numeric copying is explicitly opt-in.
 window.RationIngredientBridge=Object.freeze({
  getStage(){const d=STAGES[$('prodSpecies').value];return {group:d?.group,keys:d?.keys||[],model:$('prodSpecies').value};},
+ addFromEvidence(record,{copyValues=false}={}){
+  const lib=window.RationEvidence;
+  if(!lib)return {ok:false,error:'Evidence validation module unavailable.'};
+  const a=lib.assess(record);if(!a.valid)return {ok:false,error:'Evidence rejected: '+a.errors.join('; ')};
+  const d=STAGES[$('prodSpecies').value];
+  if(!d||d.group!==record.group)return {ok:false,error:'The record is not applicable to the selected animal group.'};
+  if(copyValues&&!a.copyCandidate)return {ok:false,error:'Source rights or evidence type do not permit nutrient transfer.'};
+  let row=ingredients.findIndex(x=>!x.name.trim());
+  if(row<0){if(ingredients.length>=60)return {ok:false,error:'Maximum 60 ingredients per formulation.'};ingredients.push(blank());row=ingredients.length-1;}
+  const ing=blank();ing.name=record.name;
+  ing.libraryMeta={referenceId:record.id,publisher:record.source.publisher,sourceRef:record.source.referenceId,method:record.source.method,
+   sourceType:record.sourceType,license:record.source.rights,rightsEvidence:record.source.rightsEvidence||'',
+   scientificReview:'NOT_VERIFIED_BY_RATIONWISE',observedOn:record.source.observedOn};
+  let copied=0;
+  if(copyValues&&a.copyCandidate){ing.dm=String(record.dryMatterPct);for(const k of d.keys){
+    if(Object.hasOwn(a.normalized,k)){
+      ing.nutrients[k]=String(a.normalized[k]);
+      ing.lineage[k]={source:record.id,status:'UNVERIFIED_EXTERNAL_EVIDENCE',measurementBasis:'dry_matter',
+       dataRights:record.source.rights,reviewedByClaim:record.source.reviewer||null,notVerifiedByPlatform:true};copied++;
+    }
+  }}
+  ingredients[row]=ing;paint();clear();updatePreflight();
+  return {ok:true,copied,missing:d.keys.filter(k=>ing.nutrients[k]==null).length};
+ },
  addFromLibrary(id,{copyDraft=false}={}){
   const record=window.RationIngredientLibraryData?.entries?.find(x=>x.id===id);
   if(!record)return {ok:false,error:'Ingredient reference not found.'};

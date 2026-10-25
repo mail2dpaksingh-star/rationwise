@@ -1,0 +1,41 @@
+/* RationWise sky-blue / azure theme. Scoped overrides loaded last; no change to calculations. */
+:root{--rw-forest:#075985;--rw-forest2:#0369a1;--rw-leaf:#7dd3fc;--rw-cream:#f0f9ff;--rw-border:#cde9f8;--rw-ink:#0c3857;--rw-muted:#55768b;--forest:#075985;--leaf:#0284c7}
+body,.rw25-formulator{background:#f2faff!important;color:#173b57}
+.rw25-header{background:#ffffff;border-bottom-color:#cde9f8}
+.rw25-brand,.rw25-form-head h2,.rw25-step .prod-panel h3{color:#075985!important}
+.rw25-mark{background:#0284c7;color:#fff}.rw25-mark span,.rw25-lime,.rw25-footer strong span{color:#38bdf8}
+.rw25-topline nav a{color:#075985}.rw25-topline nav a:hover{color:#0284c7}
+.rw25-brand small{color:#647f90}.rw25-header-cta,.rw25-solid{background:#0ea5e9!important;color:#fff!important}
+.rw25-header-cta:hover,.rw25-solid:hover{background:#0284c7!important}
+.rw25-hero{background:linear-gradient(118deg,#0369a1 0%,#0284c7 53%,#38bdf8 100%)!important;color:#fff}
+.rw25-hero h1 em,.rw25-eyebrow{color:#e0f2fe!important}.rw25-hero p,.rw25-hero-actions>span{color:#f0f9ff}
+.rw25-progress{background:#e0f2fe}.rw25-progress-button{color:#326b8d}.rw25-progress-button b{background:#bae6fd;color:#075985}.rw25-progress-button.active{color:#075985;border-color:#7dd3fc}.rw25-progress-button.active b{color:#fff;background:#0284c7}
+.rw25-wizard,.rw25-step .prod-panel,.rw25-advanced,.rw25-advanced-tool{border-color:#cce6f7!important}
+.rw25-step-lead span{color:#0284c7}
+.rw25-step-controls button{color:#075985;border-color:#9edaf6}.rw25-step-controls .rw25-next{background:#0284c7!important;border-color:#0284c7!important;color:#fff!important}
+.rw25-step input:focus,.rw25-step select:focus,.rw25-step textarea:focus{outline:2px solid #38bdf8;outline-offset:1px}
+.rw25-step .prod-result .result-head{background:#075985;color:#e0f2fe}
+.rw25-step .prod-result{border-color:#b8e0f7;color:#0c4a6e}
+.rw25-advanced>summary,.rw25-advanced-tool summary{color:#075985}
+.rw25-advanced-inner{background:#f0f9ff}
+.rw-standard-card{background:#eef9ff!important;border-color:#7dd3fc!important;color:#075985!important}
+.rw-standard-tag{color:#0369a1!important;border-color:#7dd3fc!important}
+.rw-standard-controls select{border-color:#7dd3fc;color:#075985}
+.rw-standard-card p,.rw-standard-preview{color:#366782!important}.rw-standard-table th{background:#dff4ff;color:#075985}
+.rw-lib{background:#f0f9ff!important;border-color:#93dafa!important;color:#0c4a6e!important}
+.rw-lib-top h4,.rw-lib-detail-header h5{color:#075985!important}
+.rw-lib-eyebrow,.rw-lib-kicker{color:#0284c7!important}
+.rw-lib-result:hover,.rw-lib-result.selected{background:#e0f2fe!important;border-color:#7dd3fc!important}
+.rw-lib-source{background:#f0f9ff;border-color:#bae6fd}
+.rw-lib-source strong,.rw-lib-table th,.rw-lib-result{color:#075985!important}.rw-lib-controls button{background:#0284c7!important}
+.rw-lib-controls button:hover{background:#0369a1!important}
+.rw-lib-filters input,.rw-lib-filters select,.rw-lib-results,.rw-lib-details{border-color:#b9e3f8!important}
+.rw-founder{background:linear-gradient(130deg,#e0f2fe,#ffffff 63%,#f0f9ff)!important;border-color:#c8e7f9!important;color:#0c4a6e!important}
+.rw-founder-profile{background:linear-gradient(145deg,#075985,#0284c7)!important;border-color:#0891b2!important}
+.rw-founder-initials{background:#e0f2fe!important;color:#075985!important}
+.rw-founder-story h3,.rw-founder-fields strong{color:#075985!important}.rw-founder-story>p:not(.rw-founder-overline){color:#426c85!important}
+.rw-founder-story .rw-founder-science{background:#e0f2fe!important;border-color:#0284c7!important;color:#075985!important}
+.rw-founder-fields>div{border-color:#c9e8fa!important}.rw-founder-country{color:#e0f2fe!important}
+.rw25-footer{border-color:#cce8f8}.rw25-footer strong,.rw25-footer a{color:#075985!important}
+/* Keep safety warnings distinctly amber: color conveys unreviewed / hazard statuses. */
+.rw25-safety,.rw-lib-state,.rw-standard-notice{color:#795416!important}
