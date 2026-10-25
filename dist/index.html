@@ -3,11 +3,11 @@
 <html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/>
 <title>RationWise | Feed Formulation &amp; Least-Cost Optimization</title>
 <meta content="RationWise feed formulation for cattle, buffalo, sheep, goats, pigs, poultry and fish. Enter your animal, nutrient targets, ingredients and local prices to calculate a least-cost blend." name="description"/>
-<link href="style.css" rel="stylesheet"/><link href="unified25.css" rel="stylesheet"/></head>
+<link href="style.css" rel="stylesheet"/><link href="unified25.css" rel="stylesheet"/><link href="founder.css" rel="stylesheet"/></head>
 <body>
 <header class="rw25-header"><div class="rw25-wide rw25-topline">
 <a aria-label="RationWise home" class="rw25-brand" href="#top"><span class="rw25-mark">R<span>✳</span></span><span>Ration<span class="rw25-lime">Wise</span><small>FEED FORMULATION</small></span></a>
-<nav aria-label="Main navigation"><a href="#production">Formulate feed</a><a href="#rwDraftStandards">Draft standards</a><a href="#rw25Advanced">Advanced tools</a></nav>
+<nav aria-label="Main navigation"><a href="#production">Formulate feed</a><a href="#rwDraftStandards">Draft standards</a><a href="#rw25Advanced">Advanced tools</a><a href="#about-founder">About the founder</a></nav>
 <a class="rw25-header-cta" href="#production">Free calculator ↗</a></div></header>
 <main id="top"><section class="rw25-hero"><div class="rw25-wide rw25-hero-inner">
 <div class="rw25-eyebrow">GLOBAL ANIMAL NUTRITION WORKSPACE</div>
@@ -160,5 +160,29 @@
 <div class="prod-panel s20-panel"><h3>05 · Audit, calculate and export</h3><div class="prod-buttons"><button id="s20AuditBtn" type="button">Recheck data</button><button class="primary" disabled="" id="s20Go" type="button">Calculate least-cost blend</button><button id="s20Download" type="button">Save panel JSON</button><label class="s20-picker">Import panel JSON <input accept=".json,application/json" id="s20Import" type="file"/></label></div>
 <div aria-live="polite" id="s20Audit"></div><div aria-live="polite" id="s20Result">Enter real input values to calculate.</div>
 <p class="prod-hint">The audit documents gaps; it does not check reviewer credentials, rights authenticity, contamination risks, premix potency, mixing quality, complete animal requirements, or regional feed law. Numerical results are never automatically certified as feeding-ready.</p></div>
-</div></section></details></div></details></div></section><div aria-hidden="true" class="rw25-legacy-hidden" hidden=""></div><footer class="rw25-footer"><div class="rw25-wide rw25-footer-inner"><strong>Ration<span>Wise</span></strong><p>Global feed formulation &amp; cost optimization · Scientific review required before use</p><div><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a></div></div></footer></main>
+</div></section></details></div></details></div></section><div aria-hidden="true" class="rw25-legacy-hidden" hidden=""></div><section aria-labelledby="rw-founder-title" class="rw-founder" id="about-founder">
+  <div class="rw25-wide rw-founder-shell">
+    <div class="rw-founder-profile">
+      <p class="rw-founder-overline">OWNER &amp; ANIMAL NUTRITION SPECIALIST</p>
+      <div class="rw-founder-initials" aria-hidden="true">SBS<span>✦</span></div>
+      <h2 id="rw-founder-title">Dr. Surya Bahadur Singh</h2>
+      <p class="rw-founder-subtitle">PhD · Animal Nutrition, Feed Formulation &amp; Livestock Development</p>
+      <div class="rw-founder-country">Nepal · International livestock development experience</div>
+    </div>
+    <div class="rw-founder-story">
+      <p class="rw-founder-overline">THE EXPERIENCE BEHIND RATIONWISE</p>
+      <h3>Practical feeding science, grounded in farmers’ realities.</h3>
+      <p>Dr. Surya Bahadur Singh is an animal nutrition specialist whose career spans research, university teaching, feed manufacturing and livestock development. He completed postgraduate studies in animal nutrition and doctoral research at the University of Aberdeen, Scotland.</p>
+      <p>At Nepal’s Cattle Feed and Carcass Utilization Project in Hetauda, he developed and balanced rations for dairy cattle, broilers, laying hens and pigs while strengthening feed-ingredient inspection and quality control. As a consultant to Everest Feed Industries, he developed stage-specific broiler and layer feeds, including formulations for different commercial poultry strains.</p>
+      <p>He taught applied animal nutrition at the Institute of Agriculture and Animal Sciences in Rampur, prepared practical nutrition manuals, and helped livestock officers and farmers apply least-cost ration formulation. His advisory work has also supported livestock and rural-development initiatives in Nepal and other South Asian countries.</p>
+      <div class="rw-founder-fields" aria-label="Professional experience highlights">
+        <div><strong>Feed formulation</strong><span>Dairy cattle, poultry and pigs</span></div>
+        <div><strong>Feed quality</strong><span>Ingredient assessment and mill practices</span></div>
+        <div><strong>Teaching &amp; advisory</strong><span>Nutrition education and farmer-focused tools</span></div>
+      </div>
+      <p class="rw-founder-source">Profile adapted from Dr. Singh’s autobiography, <cite>From Open Skies to Distant Horizons: A Discourse with Destiny</cite>, particularly the chapters on Aberdeen, the Hetauda feed project, feed-industry consulting, and his teaching and publications.</p>
+      <p class="rw-founder-science">RationWise provides mathematical formulation tools and draft feeding references; individual diets and source data still require appropriate independent review before animal feeding.</p>
+    </div>
+  </div>
+</section><footer class="rw25-footer"><div class="rw25-wide rw25-footer-inner"><strong>Ration<span>Wise</span></strong><p>Owned by Dr. Surya Bahadur Singh · Free feed formulation tools · Scientific review required</p><div><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a></div></div></footer></main>
 <dialog id="auditDialog"><div class="modal-head"><div><div class="mini-title">SCIENTIFIC RECORD TRACE</div><h3 id="auditTitle"></h3></div><button aria-label="Close" class="close" id="closeDialog" type="button">×</button></div><div id="auditContent"></div></dialog><dialog id="pilotRecordDialog"><div class="modal-head"><div><div class="mini-title">SEPARATE ANALYSIS AND PRICE TRACE</div><h3 id="pilotRecordName"></h3></div><button aria-label="Close" class="close" id="pilotCloseRecord" type="button">×</button></div><div id="pilotRecordDetails"></div></dialog><script src="solver.js"></script><script src="units.js"></script><script src="science2.js"></script><script src="stages.js"></script><script src="engine2.js"></script><script src="quality4.js"></script><script src="review19.js"></script><script src="requirements17.js"></script><script src="reference18.js"></script><script src="operational.js"></script><script src="requirement-ui17.js"></script><script src="reference-ui18.js"></script><script src="review-ui19.js"></script><script src="scientific20.js"></script><script src="scientific-ui20.js"></script><script src="world-currencies.js"></script><script src="global21.js"></script><script src="global-ui21.js"></script><script src="standards-draft-data.js"></script><script src="standards-draft-ui.js"></script><script src="unified25.js"></script></body></html>

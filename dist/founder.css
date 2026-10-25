@@ -1,0 +1,22 @@
+/* RationWise founder profile — separate from nutrition or formulation logic. */
+.rw-founder{background:linear-gradient(135deg,#f3f8f0 0%,#fbfcf8 63%,#eef5e9 100%);border-top:1px solid #dce9d7;padding:80px 0;color:#173d2b;scroll-margin-top:88px}
+.rw-founder-shell{display:grid;grid-template-columns:minmax(250px,.76fr) minmax(0,1.45fr);gap:clamp(20px,5vw,80px);align-items:start}
+.rw-founder-profile{background:#173d2b;border:1px solid #315942;color:#fff;border-radius:20px;padding:clamp(24px,3vw,42px);box-shadow:0 18px 34px rgba(15,51,30,.12)}
+.rw-founder-overline{font-size:11px!important;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:#6d9569;margin:0 0 16px!important}
+.rw-founder-profile .rw-founder-overline{color:#b1d49d}
+.rw-founder-initials{width:104px;height:104px;border-radius:22px;display:flex;align-items:center;justify-content:center;background:#d7e9bb;color:#17412c;font-size:36px;font-family:Georgia,serif;letter-spacing:-3px;margin:24px 0 27px;position:relative}
+.rw-founder-initials span{position:absolute;right:11px;top:5px;font:16px sans-serif;color:#749d52}
+.rw-founder-profile h2{color:#fff!important;font:600 clamp(30px,3.2vw,43px)/1.08 Georgia,serif;letter-spacing:-.6px;margin:0 0 14px;overflow-wrap:break-word}
+.rw-founder-profile .rw-founder-subtitle{color:#cfe0cf;font-size:15px;line-height:1.65;margin:0 0 27px}
+.rw-founder-country{color:#b1d49d;border-top:1px solid #41614c;padding-top:21px;font-size:13px;line-height:1.6}
+.rw-founder-story{padding-top:14px}
+.rw-founder-story h3{font:600 clamp(27px,3.15vw,40px)/1.13 Georgia,serif;margin:0 0 23px;color:#204d35;max-width:700px}
+.rw-founder-story>p:not(.rw-founder-overline){font-size:15px;line-height:1.82;color:#456251;margin:0 0 15px}
+.rw-founder-fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;margin:27px 0 23px}
+.rw-founder-fields>div{padding:17px 15px;border:1px solid #d4e3cf;border-radius:11px;background:#fff;min-width:0}
+.rw-founder-fields strong{font-size:13px;display:block;color:#205239;margin-bottom:6px}
+.rw-founder-fields span{font-size:12px;color:#667a6c;line-height:1.55;display:block}
+.rw-founder-story .rw-founder-source{font-size:12px!important;color:#748475!important;line-height:1.7!important}
+.rw-founder-story .rw-founder-science{background:#ecf4e6;padding:12px 16px;border-left:3px solid #87ac76;border-radius:5px;color:#526853!important;font-size:12px!important}
+@media(max-width:950px){.rw-founder-shell{grid-template-columns:1fr;gap:24px}.rw-founder-profile{display:grid;grid-template-columns:auto 1fr;column-gap:22px;align-items:center}.rw-founder-profile .rw-founder-overline,.rw-founder-profile .rw-founder-country{grid-column:1/-1}.rw-founder-profile .rw-founder-initials{grid-row:2/span 2;margin:12px 0}.rw-founder-profile h2{margin-bottom:5px}.rw-founder-profile .rw-founder-subtitle{margin:0}.rw-founder-profile .rw-founder-country{margin-top:20px}}
+@media(max-width:680px){.rw-founder{padding:47px 0}.rw-founder-profile{display:block}.rw-founder-initials{width:84px;height:84px;font-size:29px;margin:17px 0 20px}.rw-founder-fields{grid-template-columns:1fr}.rw-founder-story{padding-top:0}.rw-founder-profile .rw-founder-subtitle{margin-bottom:22px}.rw-founder-profile .rw-founder-country{margin-top:0}.rw25-topline nav{flex-wrap:wrap;gap:6px 12px}.rw25-topline nav a{font-size:11px}}
