@@ -110,3 +110,9 @@ body{font-family:Inter,system-ui,-apple-system,'Segoe UI',sans-serif;background:
 .rw-standard-notice{font-size:13px;margin-top:12px;color:#714612;font-weight:600}
 .rw-standard-warning{font-size:12px;margin-top:12px;padding:10px;border-radius:8px;background:#fff7e7;color:#6e4a14}
 @media(max-width:720px){.rw-standard-card{padding:15px}.rw-standard-controls button{width:100%}}
+
+/* Worldwide country/currency selector */
+.rw-world-hint{grid-column:1/-1;margin:0 0 8px;padding:10px 13px;border-left:3px solid #6a9b70;border-radius:6px;background:#edf5ec;font-size:.85rem;color:#355c43;line-height:1.5}
+#prodCountry,#prodCurrency{max-width:100%;width:100%}
+
+.rw-world-hint[data-warning="true"]{background:#fff3dd;border-left-color:#d6952b;color:#77510d}

@@ -5,14 +5,7 @@
 (function(root){'use strict';
 const STAGES=(typeof module!=='undefined'&&module.exports)?require('./stages').STAGES:root.RationStages.STAGES;
 const VERSION='rationwise-global-farm-v2.1';
-const COUNTRY_OPTIONS=Object.freeze([
- ['US','United States','USD'],['IN','India','INR'],['NP','Nepal','NPR'],['BD','Bangladesh','BDT'],['PK','Pakistan','PKR'],
- ['GB','United Kingdom','GBP'],['DE','Germany','EUR'],['FR','France','EUR'],['NL','Netherlands','EUR'],['BR','Brazil','BRL'],
- ['AU','Australia','AUD'],['NZ','New Zealand','NZD'],['CA','Canada','CAD'],['MX','Mexico','MXN'],['NG','Nigeria','NGN'],
- ['KE','Kenya','KES'],['UG','Uganda','UGX'],['GH','Ghana','GHS'],['ZA','South Africa','ZAR'],['ET','Ethiopia','ETB'],
- ['TH','Thailand','THB'],['VN','Vietnam','VND'],['ID','Indonesia','IDR'],['PH','Philippines','PHP'],['CN','China','CNY'],
- ['JP','Japan','JPY'],['AE','United Arab Emirates','AED'],['SA','Saudi Arabia','SAR']
-].map(([code,name,currency])=>Object.freeze({code,name,currency})));
+const COUNTRY_OPTIONS=Object.freeze(((typeof module!=='undefined'&&module.exports)?require('./world-currencies').countryOptions:(root.RationWorldCurrencies?.countryOptions || [])).map(({code,name,currency})=>Object.freeze({code,name,currency})));
 const BREEDS=Object.freeze({
  cattle:['Holstein Friesian','Jersey','Brown Swiss','Gir','Sahiwal','Red Sindhi','Angus','Hereford','Brahman','Crossbred','Other / unlisted'],
  buffalo:['Murrah','Nili-Ravi','Jaffarabadi','Mediterranean','Surti','Mehsana','Other / unlisted'],
