@@ -90,3 +90,23 @@ body{font-family:Inter,system-ui,-apple-system,'Segoe UI',sans-serif;background:
 
 .rw25-step .table-scroll{scrollbar-color:#719b7c #edf3ec}
 .rw25-step #prodIngredients{min-width:980px}
+
+/* RationWise free standards workflow */
+.rw-standard-card{background:#f3f8ed;border:1px solid #b5d4a0;border-radius:18px;padding:22px;margin:12px 0 20px;color:#173726}
+.rw-standard-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.rw-standard-tag{font-size:10px;letter-spacing:.13em;font-weight:800;color:#37693b;border:1px solid #bed4b4;border-radius:99px;padding:6px 10px}
+.rw-standard-card p{font-size:14px;line-height:1.55;margin:5px 0 16px;color:#476049}
+.rw-standard-controls{display:flex;gap:12px;align-items:end;flex-wrap:wrap}
+.rw-standard-controls label{flex:1 1 290px;display:flex;flex-direction:column;gap:8px;font-weight:650;font-size:13px}
+.rw-standard-controls select{width:100%;border:1px solid #9fb5a0;border-radius:10px;padding:12px;background:#fff;min-width:0;color:#163524}
+.rw-standard-controls button{min-height:45px}
+.rw-standard-preview{margin-top:14px;line-height:1.5;color:#26482e}
+.rw-standard-summary{display:flex;flex-wrap:wrap;gap:6px;font-size:12px;margin:8px 0 10px}
+.rw-standard-summary span{background:white;border:1px solid #d1e0c4;border-radius:99px;padding:4px 9px}
+.rw-standard-table-wrap{overflow-x:auto;max-width:100%}
+.rw-standard-table{border-collapse:collapse;width:100%;min-width:500px;font-size:12px;background:#fff}
+.rw-standard-table th,.rw-standard-table td{padding:8px 10px;text-align:left;border-bottom:1px solid #deead8}
+.rw-standard-table th{font-size:11px;color:#42644b;background:#e6f1e3}
+.rw-standard-notice{font-size:13px;margin-top:12px;color:#714612;font-weight:600}
+.rw-standard-warning{font-size:12px;margin-top:12px;padding:10px;border-radius:8px;background:#fff7e7;color:#6e4a14}
+@media(max-width:720px){.rw-standard-card{padding:15px}.rw-standard-controls button{width:100%}}
