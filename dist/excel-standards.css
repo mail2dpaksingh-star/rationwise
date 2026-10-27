@@ -1,0 +1,44 @@
+/* RationWise professional Excel evidence controls */
+.x25-panel{background:linear-gradient(155deg,#f8fcff 0%,#edf8ff 100%);border:1px solid #b5ddf1;border-radius:18px;padding:clamp(16px,3vw,26px);margin:18px 0 22px;box-shadow:0 6px 21px rgba(27,99,148,.06);color:#173953}
+.x25-head{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+.x25-overline{letter-spacing:.12em;font-size:.72rem;text-transform:uppercase;font-weight:800;color:#176a9f;margin:0 0 7px}
+.x25-head h3{font-size:clamp(1.24rem,2vw,1.65rem);font-weight:750;line-height:1.2;margin:0!important;color:#10374d}
+.x25-head p{margin:8px 0 0;color:#466576;line-height:1.6;max-width:740px;font-size:.91rem}
+.x25-chip{padding:7px 11px;background:#daf1ff;border:1px solid #a3d6f2;border-radius:50px;font-size:.75rem;font-weight:700;color:#11618b;white-space:nowrap}
+.x25-controls{display:grid;grid-template-columns:minmax(180px,1fr) minmax(250px,2fr);gap:12px;margin:16px 0 12px}
+.x25-controls label{font-size:.83rem;font-weight:700;color:#28526b;display:flex;flex-direction:column;gap:6px}
+.x25-controls input,.x25-controls select{width:100%;border:1px solid #accbde;border-radius:11px;background:#fff;color:#193c57;padding:11px;font-family:inherit;font-size:.94rem;min-width:0;min-height:44px}
+.x25-controls input:focus,.x25-controls select:focus{outline:2px solid #44b4f3;outline-offset:1px}
+.x25-inspector,.x25-ingredient-detail{background:white;border:1px solid #d6e9f4;border-radius:12px;padding:15px;min-height:85px}
+.x25-source{display:flex;flex-wrap:wrap;gap:5px 18px;align-items:baseline;margin-bottom:13px;font-size:.82rem;color:#53728a}
+.x25-source strong{font-weight:700;color:#153f60}
+.x25-table-wrap{max-height:365px;overflow:auto;scrollbar-color:#a7d6ec transparent}
+.x25-table{width:100%;border-collapse:collapse;font-size:.82rem;line-height:1.45;text-align:left}
+.x25-table th{position:sticky;top:0;background:#eaf5fb;color:#24526e;z-index:1;padding:10px 9px;white-space:nowrap;font-weight:700}
+.x25-table td{border-bottom:1px solid #e4eef5;padding:9px;vertical-align:top;color:#304f63}
+.x25-table td small{display:block;margin-top:3px;font-size:.71rem;color:#72889b}
+.x25-table td b{color:#173e5b}
+.x25-status{display:inline-block;padding:3px 7px;background:#eef1f4;border-radius:7px;font-size:.69rem;font-weight:650;color:#5f6f7e;white-space:nowrap}
+.x25-status.ok{color:#0d687d;background:#d8f5f4}.x25-status.risk{color:#ad5a12;background:#fff3df}
+.x25-note{color:#566b7c;font-size:.80rem;line-height:1.55;margin:12px 0 3px}
+.x25-actions{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:14px 0 0}
+.x25-check{display:flex!important;gap:9px;align-items:flex-start;line-height:1.5;font-size:.8rem;color:#425f72;flex:1 1 300px}
+.x25-check input{accent-color:#0887c8;width:16px;height:16px;flex:none;margin-top:3px}
+.x25-primary{border:0!important;background:#0889cd!important;color:white!important;border-radius:10px!important;font-weight:750!important;padding:12px 16px!important;cursor:pointer;min-height:44px}
+.x25-primary:disabled{background:#b7cad4!important;cursor:not-allowed}
+.x25-secondary{background:#e2f3fd!important;color:#07587f!important;border:1px solid #b5d8eb!important;margin:10px 0}
+.x25-report{margin-top:10px;line-height:1.5;color:#1f5a72;font-size:.88rem;font-weight:600}
+.x25-ingredient-grid{display:grid;grid-template-columns:minmax(195px,1fr) minmax(0,2fr);gap:14px}
+.x25-results{border:1px solid #d3e6f1;background:white;border-radius:12px;max-height:325px;overflow:auto}
+.x25-hit{display:block;width:100%;padding:10px 12px;border:0;border-bottom:1px solid #eef4f8;outline-offset:-3px;background:white;text-align:left;color:#184763;cursor:pointer}
+.x25-hit b{display:block;font-size:.84rem}.x25-hit span{display:block;color:#7895a5;font-size:.69rem;margin-top:3px}
+.x25-hit:hover,.x25-hit.picked{background:#e1f5ff}
+.x25-ingredient-detail h4{font-size:1rem;margin:0;color:#164463}
+.x25-muted{color:#668194;font-size:.87rem;line-height:1.5}
+#rwDraftStandards{display:none!important}
+@media(max-width:700px){.x25-controls,.x25-ingredient-grid{grid-template-columns:1fr}.x25-table{min-width:450px}.x25-ingredient-detail{min-height:70px}.x25-head{align-items:flex-start}.x25-panel{padding:14px}.x25-table-wrap{max-height:260px}}
+/* Integrate the older tabular calculator into the new sky-blue visual language. */
+.rw25-formulator .prod-table thead th{background:#e8f5fc!important;color:#174869!important;border-bottom:1px solid #b8dcec!important}
+.rw25-formulator .prod-table tbody tr:nth-child(even){background:#f8fcff!important}
+.rw25-formulator .prod-table input:focus,.rw25-formulator .prod-table select:focus{outline:2px solid #3daee8!important;outline-offset:1px}
+.rw25-formulator .prod-table input,.rw25-formulator .prod-table select{border-color:#c3dce9!important;color:#1a475d!important}
