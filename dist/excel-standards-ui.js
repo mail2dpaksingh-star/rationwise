@@ -55,9 +55,9 @@ function showProfile(){
  if(window.RationCompleteUI)window.RationCompleteUI.select(p);
  $('rwExcelMatch').hidden=!p;
  if(!p){inspector.innerHTML='<p class="x25-muted">Choose a stage from the cards or stage dropdown to view its source, nutrients and suitability.</p>';markTransferStatus();return;}
- const tr=p.values.map(v=>`<tr><td>${safe(v.label)}<small>Excel cell ${safe(v.cell)}</small></td><td><b>${safe(v.raw)}</b> ${safe(v.unit)}</td></tr>`).join('');
+ const tr=p.values.map(v=>`<tr><td>${safe(v.label)}</td><td><b>${safe(v.raw)}</b> ${safe(v.unit)}</td></tr>`).join('');
  inspector.innerHTML=`<div class="x25-source"><strong>${safe(p.name)}</strong><span>${safe(p.species)} · ${p.values.length} source measurements</span><span>Source: ${safe(p.workbook)} · ${safe(p.sheet)} · ${safe(p.headCell)}</span></div>
- <div class="x25-table-wrap"><table class="x25-table"><thead><tr><th>Feeding-standard measurement</th><th>Excel value</th></tr></thead><tbody>${tr}</tbody></table></div>
+ <div class="x25-table-wrap"><table class="x25-table"><thead><tr><th>Feeding-standard measurement</th><th>Value</th></tr></thead><tbody>${tr}</tbody></table></div>
  <p class="x25-note">The complete calculation below uses nutrient concentrations where the worksheet gives interpretable values and units. Animal intake and feeding-period measurements are shown separately. Original source data still require independent nutritional validation.</p>`;
  modelSelect.innerHTML=p.models.length?p.models.filter(m=>models[m]).map(m=>`<option value="${safe(m)}">${safe(models[m].stage)}</option>`).join(''):'<option value="">No matching animal-stage calculator</option>';
  modelSelect.value=p.models.includes(activeStage())?activeStage():modelSelect.options[0]?.value||'';
@@ -131,7 +131,7 @@ function selectIngredient(id){
  selectedIngredient=ings.find(x=>x.id===id)||null;if(!selectedIngredient)return;
  const x=selectedIngredient;
  iDetail.innerHTML=`<h4>${safe(x.name)}</h4><p class="x25-muted">${safe(x.workbook)} · ${safe(x.sheet)} · Row ${x.row}</p>
- <div class="x25-table-wrap"><table class="x25-table"><thead><tr><th>Nutrient in source</th><th>Workbook value</th><th>Cell</th></tr></thead><tbody>${x.measurements.slice(0,25).map(m=>`<tr><td>${safe(m.metric||'Unlabeled measurement')}</td><td>${safe(m.raw)}</td><td>${safe(m.column+x.row)}</td></tr>`).join('')}</tbody></table></div>
+ <div class="x25-table-wrap"><table class="x25-table"><thead><tr><th>Nutrient in source</th><th>Value</th></tr></thead><tbody>${x.measurements.slice(0,25).map(m=>`<tr><td>${safe(m.metric||'Unlabeled measurement')}</td><td>${safe(m.raw)}</td></tr>`).join('')}</tbody></table></div>
  <p class="x25-note">Ingredient data in this table may need matching laboratory measurements and local prices before they can support a feed calculation.</p><button type="button" id="rwExcelAddName" class="x25-primary x25-secondary">Add ingredient name only</button><span id="rwExcelIngredientMessage" role="status"></span>`;
  $('rwExcelAddName').addEventListener('click',addName);renderIngredients();
 }
