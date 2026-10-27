@@ -43,8 +43,8 @@ function markTransferStatus(){
  const selectedModel=models[activeStage()];
  const count=p&&matched&&selectedModel?p.values.filter(v=>v.mapping&&selectedModel.keys.includes(v.mapping.key)).length:0;
  $('rwExcelTransfer').disabled=!matched||count===0;
- if(p&&matched&&count===0){$('rwExcelMatchHint').textContent='This workbook entry has no compatible numerical targets for this stage. It is available for reference only.';}
- else if(p&&!matched){const msg=p.models.length?'Reference selected. Match its animal/stage to the calculator to enable copying.':'This entry is reference-only: no matching calculator model exists.';
+ if(p&&matched&&count===0){$('rwExcelMatchHint').textContent='Enter appropriate nutrient measurements to calculate this stage.';}
+ else if(p&&!matched){const msg=p.models.length?'Select the matching animal and stage to calculate.':'This animal or stage does not yet have its own calculation model.';
  $('rwExcelMatchHint').textContent=msg;}
  else if(p){$('rwExcelMatchHint').textContent='Matching animal and stage confirmed. Review workbook units and required nutrients before copying.';}
 }
@@ -52,19 +52,14 @@ function showProfile(){
  selectedProfile=profiles.find(p=>p.id===profileSelect.value)||null;
  $('rwExcelConfirm').checked=false;report.textContent='';
  const p=selectedProfile;
+ if(window.RationCompleteUI)window.RationCompleteUI.select(p);
  $('rwExcelMatch').hidden=!p;
  if(!p){inspector.innerHTML='<p class="x25-muted">Choose a stage from the cards or stage dropdown to view its source, nutrients and suitability.</p>';markTransferStatus();return;}
- const tr=p.values.slice(0,36).map(v=>{
-  const mapping=v.mapping;const hasIssue=!!v.issue;
-  const marker=hasIssue&&v.issue.includes('date serial')?'Check Excel cell':mapping?'Unit mapping available':hasIssue?'Requires review':'Reference only';
-  const description=mapping?`${safe(units[mapping.key]?.name||mapping.key)} · ${mapping.mode==='min'?'minimum':'maximum'} · ${mapping.basis==='dm'?'dry matter':'as-fed'}`:hasIssue?safe(v.issue):'Cannot automatically map to this calculator';
-  return `<tr><td>${safe(v.label)}<small>Cell ${safe(v.cell)}</small></td><td><b>${safe(v.raw)}</b> ${safe(v.unit)}</td><td><span class="x25-status ${mapping?'ok':hasIssue?'risk':''}">${marker}</span><small>${description}</small></td></tr>`;
- }).join('');
- const compatible=p.values.filter(v=>v.mapping&&p.models.some(model=>models[model]?.keys.includes(v.mapping.key))).length;
- inspector.innerHTML=`<div class="x25-source"><strong>${safe(p.name)}</strong><span>${safe(p.species)} · ${compatible} field${compatible===1?'':'s'} potentially mappable</span><span>Source: ${safe(p.workbook)} · worksheet ${safe(p.sheet)} · header cell ${safe(p.headCell)}</span></div>
- <div class="x25-table-wrap"><table class="x25-table"><thead><tr><th>Nutrient / original cell</th><th>Source value</th><th>How it can be used</th></tr></thead><tbody>${tr}</tbody></table></div>
- <p class="x25-note">Source workbook data are not independently verified or approved diets. No cross-species substitution, invented nutrients, or automatic commercial-use permissions. Daily intake and dietary concentrations must not be interchanged.</p>`;
- modelSelect.innerHTML=p.models.length?p.models.filter(m=>models[m]).map(m=>`<option value="${safe(m)}">${safe(models[m].stage)}</option>`).join(''):'<option value="">No matching calculation model — reference only</option>';
+ const tr=p.values.map(v=>`<tr><td>${safe(v.label)}<small>Excel cell ${safe(v.cell)}</small></td><td><b>${safe(v.raw)}</b> ${safe(v.unit)}</td></tr>`).join('');
+ inspector.innerHTML=`<div class="x25-source"><strong>${safe(p.name)}</strong><span>${safe(p.species)} · ${p.values.length} source measurements</span><span>Source: ${safe(p.workbook)} · ${safe(p.sheet)} · ${safe(p.headCell)}</span></div>
+ <div class="x25-table-wrap"><table class="x25-table"><thead><tr><th>Feeding-standard measurement</th><th>Excel value</th></tr></thead><tbody>${tr}</tbody></table></div>
+ <p class="x25-note">The complete calculation below uses nutrient concentrations where the worksheet gives interpretable values and units. Animal intake and feeding-period measurements are shown separately. Original source data still require independent nutritional validation.</p>`;
+ modelSelect.innerHTML=p.models.length?p.models.filter(m=>models[m]).map(m=>`<option value="${safe(m)}">${safe(models[m].stage)}</option>`).join(''):'<option value="">No matching animal-stage calculator</option>';
  modelSelect.value=p.models.includes(activeStage())?activeStage():modelSelect.options[0]?.value||'';
  $('rwExcelUseModel').disabled=!modelSelect.value||activeStage()===modelSelect.value;
  markTransferStatus();
@@ -75,9 +70,9 @@ function renderOptions(){
  const count=choices.length;
  $('rwExcelCount').textContent=`${profiles.length} stage references · ${db.sourceCount} Excel workbooks`;
  $('rwExcelMatchCount').textContent=`${count} reference stage${count===1?'':'s'} found`;
- $('rwExcelBrowseInfo').textContent=animal==='all'?'Browse all animals. Reference-only entries are available for inspection.':`${categories.find(x=>x[0]===animal)?.[1]||animal}: ${count?'choose a breed and production stage':'no matching workbook entry; enter verified targets manually'}`;
+ $('rwExcelBrowseInfo').textContent=animal==='all'?'Browse all animal groups and available feeding standards.':`${categories.find(x=>x[0]===animal)?.[1]||animal}: ${count?'choose a breed and production stage':'no matching workbook entry; enter verified targets manually'}`;
  $('rwExcelCards').innerHTML=choices.slice(0,visibleLimit).map(p=>{
-  const count=p.values.filter(v=>v.mapping).length;return `<button type="button" data-profile="${safe(p.id)}" class="x25-card ${before===p.id?'picked':''}"><span class="x25-card-title">${safe(p.name)}</span><span class="x25-card-foot"><span>${safe(p.sheet)} · ${safe(p.stage)}</span><span class="x25-state ${p.models.length?'':'muted'}">${p.models.length?`${count} mapped`:'Reference only'}</span></span></button>`;
+  const count=p.values.filter(v=>v.mapping).length;return `<button type="button" data-profile="${safe(p.id)}" class="x25-card ${before===p.id?'picked':''}"><span class="x25-card-title">${safe(p.name)}</span><span class="x25-card-foot"><span>${safe(p.sheet)} · ${safe(p.stage)}</span><span class="x25-state ${p.models.length?'':'muted'}">${p.models.length?`${count} nutrient fields`:'Browse standards'}</span></span></button>`;
  }).join('')||(animal==='buffalo'||animal==='sheep'?'<div class="x25-empty"><b>No dedicated values in these Excel workbooks yet.</b> This animal remains supported in the calculator, but requires its own verified nutrient targets. Cattle or goat standards will not be copied automatically.</div>':'<div class="x25-empty">No references match your filters. Try a different breed, animal group or search term.</div>');
  $('rwExcelMore').hidden=count<=visibleLimit;
  $('rwExcelMore').textContent=`Show more stages (${count-visibleLimit} remaining)`;
@@ -137,7 +132,7 @@ function selectIngredient(id){
  const x=selectedIngredient;
  iDetail.innerHTML=`<h4>${safe(x.name)}</h4><p class="x25-muted">${safe(x.workbook)} · ${safe(x.sheet)} · Row ${x.row}</p>
  <div class="x25-table-wrap"><table class="x25-table"><thead><tr><th>Nutrient in source</th><th>Workbook value</th><th>Cell</th></tr></thead><tbody>${x.measurements.slice(0,25).map(m=>`<tr><td>${safe(m.metric||'Unlabeled measurement')}</td><td>${safe(m.raw)}</td><td>${safe(m.column+x.row)}</td></tr>`).join('')}</tbody></table></div>
- <p class="x25-note">Reference only — measurement basis, commercial rights, species-specific energy/digestibility, ingredient dry matter and safety have not been confirmed. Numeric values are NOT transferred automatically.</p><button type="button" id="rwExcelAddName" class="x25-primary x25-secondary">Add ingredient name only</button><span id="rwExcelIngredientMessage" role="status"></span>`;
+ <p class="x25-note">Ingredient data in this table may need matching laboratory measurements and local prices before they can support a feed calculation.</p><button type="button" id="rwExcelAddName" class="x25-primary x25-secondary">Add ingredient name only</button><span id="rwExcelIngredientMessage" role="status"></span>`;
  $('rwExcelAddName').addEventListener('click',addName);renderIngredients();
 }
 function addName(){
