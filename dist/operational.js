@@ -174,6 +174,51 @@ for(const id of ['prodBreed','prodAnimalContext','prodCountry','prodCurrency','p
 // Reference-library bridge: does NOT mark draft values as laboratory tests, licensed,
 // reviewed, or suitable for feeding. Numeric copying is explicitly opt-in.
 window.RationIngredientBridge=Object.freeze({
+ // Collapse repeated ingredient rows only when there is no conflicting lab,
+ // source, price, safety or nutrient information. Differences are never hidden.
+ consolidateIdentical(){
+  const key=v=>String(v||'').normalize('NFKC').trim().replace(/\s+/g,' ').toLocaleLowerCase('en-US');
+  const groups=new Map();ingredients.forEach((a,i)=>{const k=key(a.name);if(!k)return;if(!groups.has(k))groups.set(k,[]);groups.get(k).push(i);});
+  const toRemove=[];const conflicts=[];
+  const clean=v=>v==null?'':String(v).trim();
+  const compatible=(x,y)=>{const a=clean(x),b=clean(y);if(!a||!b)return true;if(!Number.isNaN(Number(a))&&!Number.isNaN(Number(b)))return Number(a)===Number(b);return a===b;};
+  for(const idxs of groups.values()){
+   if(idxs.length<2)continue;
+   const name=ingredients[idxs[0]].name;
+   const base=ingredients[idxs[0]];
+   for(const j of idxs.slice(1)){
+    const other=ingredients[j];
+    // The expanded analysis inputs may contain user edits that have not yet
+    // been copied into the operational record. Never collapse rows while
+    // any such edits could be shifted onto another ingredient by reindexing.
+    const expandedInputs=[...document.querySelectorAll('#rwCompleteAnalysis [data-rw-nutrient]')];
+    if(expandedInputs.some(el=>String(el.value||'').trim()!=='')){
+      conflicts.push(name);continue;
+    }
+    const scalar=['dm','price','analysisRef','rightsRef','hazardEvidence'];
+    const hazardA=base.hazardStatus||'not_checked',hazardB=other.hazardStatus||'not_checked';
+    const differentSource=base.libraryMeta?.id&&other.libraryMeta?.id&&base.libraryMeta.id!==other.libraryMeta.id;
+    const differentLab=base.labMeta&&other.labMeta&&JSON.stringify(base.labMeta)!==JSON.stringify(other.labMeta);
+    const differentNutrients=[...new Set([...Object.keys(base.nutrients||{}),...Object.keys(other.nutrients||{}),...Object.keys(base.expandedNutrients||{}),...Object.keys(other.expandedNutrients||{})])].some(k=>!compatible(base.nutrients?.[k],other.nutrients?.[k])||!compatible(base.expandedNutrients?.[k],other.expandedNutrients?.[k]));
+    const differentInclusion=!compatible(base.min,other.min)||!compatible(base.max,other.max);
+    const differentHazard=hazardA!=='not_checked'&&hazardB!=='not_checked'&&hazardA!==hazardB;
+    if(differentSource||differentLab||differentNutrients||differentInclusion||differentHazard||scalar.some(k=>!compatible(base[k],other[k]))){conflicts.push(name);continue;}
+    // Keep all non-empty values and provenance from the two consistent rows.
+    for(const k of [...scalar,'min','max'])if(!clean(base[k])&&clean(other[k]))base[k]=other[k];
+    if(hazardA==='not_checked'&&hazardB!=='not_checked')base.hazardStatus=hazardB;
+    for(const k of ['nutrients','expandedNutrients','lineage']){
+      base[k]=base[k]||{};
+      for(const [n,v] of Object.entries(other[k]||{}))if(base[k][n]===undefined||base[k][n]==='')base[k][n]=v;
+    }
+    if(!base.libraryMeta&&other.libraryMeta)base.libraryMeta=other.libraryMeta;
+    if(!base.labMeta&&other.labMeta)base.labMeta=other.labMeta;
+    toRemove.push(j);
+   }
+  }
+  for(const i of toRemove.sort((a,b)=>b-a))ingredients.splice(i,1);
+  if(toRemove.length){paint();clear();updatePreflight();}
+  return {removed:toRemove.length,conflicts:[...new Set(conflicts)]};
+ },
  getStage(){const d=STAGES[$('prodSpecies').value];return {group:d?.group,keys:d?.keys||[],model:$('prodSpecies').value};},
  getExpandedValue(i,key){return ingredients[i]?.expandedNutrients?.[key]??'';},
  addFromWorkbook(record,config={}){
@@ -183,7 +228,15 @@ window.RationIngredientBridge=Object.freeze({
   let result;
   try{result=lib.prepare(record,{group:stage.group,...config});}
   catch(e){return {ok:false,error:e.message};}
-  const already=ingredients.findIndex(a=>a.libraryMeta?.id===result.source.id);
+  // Treat an ingredient name as one ingredient unless the farmer explicitly names
+  // distinct lots. Do not silently mix records from two different source tables.
+  const normalizeName=v=>String(v||'').normalize('NFKC').trim().replace(/\s+/g,' ').toLocaleLowerCase('en-US');
+  const identicalSource=ingredients.findIndex(a=>a.libraryMeta?.id===result.source.id);
+  const sameName=ingredients.findIndex(a=>normalizeName(a.name)===normalizeName(result.name));
+  if(identicalSource<0&&sameName>=0&&ingredients[sameName].libraryMeta?.id&&ingredients[sameName].libraryMeta.id!==result.source.id){
+   return {ok:false,error:result.name+' is already in the formulation from a different source. Edit its existing row, or give the separate batch a distinct name (for example, Lot B). No values were replaced.'};
+  }
+  const already=identicalSource>=0?identicalSource:sameName;
   let row=already;
   if(row<0){
    row=ingredients.findIndex(a=>!a.name.trim());
