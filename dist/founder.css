@@ -35,3 +35,10 @@
 .rw-founder-profile .rw-founder-overline{margin-bottom:22px!important}
 @media(max-width:800px){.rw-expertise-panel{align-items:flex-start;flex-direction:column;gap:13px}.rw-expertise-action{white-space:normal}.rw-expertise{padding:20px 0 26px}}
 @media(max-width:540px){.rw-expertise-tabs{gap:2px}.rw-expertise-tab{flex:1 1 auto;font-size:12px;padding:10px 8px}.rw-expertise-panel{padding:16px}.rw-expertise-panel h3{font-size:16px}}
+
+/* The expert profile only opens when requested via the Expert navigation. */
+.rw-founder[hidden]{display:none!important}
+.rw-founder-tools{display:flex;justify-content:flex-end;margin-bottom:14px}
+.rw-founder-close{font:700 13px/1.4 Inter,system-ui,sans-serif;color:#075985;background:#e0f2fe;border:1px solid #9dd6f9;border-radius:9px;padding:10px 15px;cursor:pointer}
+.rw-founder-close:hover{background:#c5e9fc}
+.rw-founder-close:focus-visible{outline:3px solid #38bdf8;outline-offset:3px}
