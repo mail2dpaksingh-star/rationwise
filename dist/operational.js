@@ -9,7 +9,7 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const fmt=(n,dp=2)=>Number.isFinite(n)?n.toLocaleString('en-US',{maximumFractionDigits:dp}):'—';
 const today=()=>new Date().toISOString().slice(0,10);
 let ingredients=[],targets=[],last=null;
-function blank(){return {name:'',dm:'',price:'',min:'0',max:'100',analysisRef:'',rightsRef:'',nutrients:{},labMeta:null,lineage:{},hazardStatus:'not_checked',hazardEvidence:''};}
+function blank(){return {name:'',dm:'',price:'',min:'0',max:'100',analysisRef:'',rightsRef:'',nutrients:{},expandedNutrients:{},labMeta:null,lineage:{},hazardStatus:'not_checked',hazardEvidence:''};}
 function resetStage(){const d=STAGES[$('prodSpecies').value];$('prodStage').value=d.stage;$('prodModelInfo').textContent=d.context+' Required nutrient values are blank until provided by you. This stage template is not a complete animal nutrition specification.';targets=d.keys.map((key,i)=>({key,mode:d.directions[i],basis:'dm',value:''}));ingredients=[blank(),blank(),blank()];paint();clear();updatePreflight();}
 function clear(){last=null;$('prodOutput').innerHTML='<div class="result-empty">Enter your measured ingredient values, local quotes, and independently established stage requirements to calculate.</div>';}
 function paint(){
@@ -175,6 +175,29 @@ for(const id of ['prodBreed','prodAnimalContext','prodCountry','prodCurrency','p
 // reviewed, or suitable for feeding. Numeric copying is explicitly opt-in.
 window.RationIngredientBridge=Object.freeze({
  getStage(){const d=STAGES[$('prodSpecies').value];return {group:d?.group,keys:d?.keys||[],model:$('prodSpecies').value};},
+ getExpandedValue(i,key){return ingredients[i]?.expandedNutrients?.[key]??'';},
+ addFromWorkbook(record,config={}){
+  const lib=window.RationWorkbookIngredientTransfer;
+  const stage=STAGES[$('prodSpecies').value];
+  if(!lib||!stage)return {ok:false,error:'Ingredient transfer or animal stage is unavailable.'};
+  let result;
+  try{result=lib.convert(record,{group:stage.group,...config});}
+  catch(e){return {ok:false,error:e.message};}
+  let row=ingredients.findIndex(a=>!a.name.trim());
+  if(row<0){if(ingredients.length>=60)return {ok:false,error:'Maximum 60 ingredients per formulation.'};ingredients.push(blank());row=ingredients.length-1;}
+  const a=blank();a.name=result.name;a.dm=String(result.dmPct);
+  a.libraryMeta={...result.source,basis:result.basis,notALaboratoryRecord:true};
+  a.expandedNutrients={...result.expanded};
+  const matched=[];
+  for(const key of stage.keys){if(Number.isFinite(result.main[key])){
+    a.nutrients[key]=String(Number(result.main[key].toFixed(6)));
+    a.lineage[key]={source:result.source.id,workbook:result.source.workbook,sheet:result.source.sheet,row:result.source.row, status:'UNREVIEWED_SOURCE_VALUE',basis:'dry_matter',notMeasured:true};
+    matched.push(key);
+  }}
+  // Price, permission proof, hazard status and laboratory results are never invented.
+  ingredients[row]=a;paint();clear();updatePreflight();
+  return {ok:true,rowIndex:row,matched,expanded:Object.keys(a.expandedNutrients),transferred:result.transferred,missing:stage.keys.filter(k=>!matched.includes(k))};
+ },
  addFromEvidence(record,{copyValues=false}={}){
   const lib=window.RationEvidence;
   if(!lib)return {ok:false,error:'Evidence validation module unavailable.'};

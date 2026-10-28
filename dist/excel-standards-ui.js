@@ -125,28 +125,55 @@ function apply(){
  report.scrollIntoView({block:'nearest',behavior:'smooth'});
 }
 $('rwExcelTransfer').addEventListener('click',apply);
-// Source ingredient lookup unchanged: name transfer only, no unsafe nutritional-value guesses.
-const iSearch=$('rwExcelIngredientSearch'), iResults=$('rwExcelIngredientResults'), iDetail=$('rwExcelIngredientDetail'), ings=ingredients;
+// Add source-backed ingredient values to the currently selected formulation.
+// Only dimensions with a confirmed source basis or a user-specified basis are transferred.
+const iSearch=$('rwExcelIngredientSearch'),iResults=$('rwExcelIngredientResults'),iDetail=$('rwExcelIngredientDetail'),ings=ingredients;
+const wbTransfer=window.RationWorkbookIngredientTransfer;
 function renderIngredients(){
  const q=iSearch.value.toLowerCase().trim(),matches=ings.filter(x=>!q||(x.name+' '+x.sheet).toLowerCase().includes(q)).slice(0,28);
- iResults.innerHTML=matches.map(x=>`<button type="button" data-ingredient="${safe(x.id)}" class="x25-hit ${selectedIngredient?.id===x.id?'picked':''}"><b>${safe(x.name)}</b><span>${safe(x.sheet)} · Row ${x.row}</span></button>`).join('')||'<p class="x25-muted">No matching ingredient reference.</p>';
- $('rwExcelIngredientCount').textContent=`${ings.length} workbook ingredient entries`;
+ iResults.innerHTML=matches.map(x=>`<button type="button" data-ingredient="${safe(x.id)}" class="x25-hit ${selectedIngredient?.id===x.id?'picked':''}"><b>${safe(x.name)}</b><span>${safe(x.sheet)} · Row ${x.row}</span></button>`).join('')||'<p class="x25-muted">No matching ingredient found.</p>';
+ $('rwExcelIngredientCount').textContent=`${ings.length} ingredient entries`;
 }
 function selectIngredient(id){
  selectedIngredient=ings.find(x=>x.id===id)||null;if(!selectedIngredient)return;
  const x=selectedIngredient;
- iDetail.innerHTML=`<h4>${safe(x.name)}</h4><p class="x25-muted">${safe(x.workbook)} · ${safe(x.sheet)} · Row ${x.row}</p>
- <div class="x25-table-wrap"><table class="x25-table"><thead><tr><th>Nutrient in source</th><th>Value</th></tr></thead><tbody>${x.measurements.slice(0,25).map(m=>`<tr><td>${safe(m.metric||'Unlabeled measurement')}</td><td>${safe(m.raw)}</td></tr>`).join('')}</tbody></table></div>
- <p class="x25-note">Ingredient data in this table may need matching laboratory measurements and local prices before they can support a feed calculation.</p><button type="button" id="rwExcelAddName" class="x25-primary x25-secondary">Add ingredient name only</button><span id="rwExcelIngredientMessage" role="status"></span>`;
- $('rwExcelAddName').addEventListener('click',addName);renderIngredients();
+ const known=wbTransfer?.declaredBasis(x),dryMatter=wbTransfer?.sourceDM(x);
+ const stage=window.RationIngredientBridge?.getStage();
+ const compatible=wbTransfer?.applicable(x,stage?.group);
+ const rows=x.measurements.slice(0,30).map(m=>`<tr><td>${safe(m.metric||'Ingredient measurement')}</td><td>${safe(m.raw)}</td></tr>`).join('');
+ iDetail.innerHTML=`<h4>${safe(x.name)}</h4><p class="x25-muted">${safe(x.sheet)} · Row ${x.row}</p>
+ <div class="x25-table-wrap"><table class="x25-table"><thead><tr><th>Nutrient</th><th>Value</th></tr></thead><tbody>${rows}</tbody></table></div>
+ <div class="x25-source-fields">${known?'<p>Source nutrient values: <strong>dry-matter basis</strong>.</p>':`<label>Nutrient values measured on<select id="rwIngredientBasis"><option value="">Choose basis…</option><option value="dm">Dry-matter basis</option><option value="as_fed">As-fed basis</option></select></label>`}
+ ${dryMatter===null?'<label>Ingredient dry matter (%)<input id="rwIngredientDryMatter" type="number" min="0.01" max="100" step="any" placeholder="Enter dry matter %"/></label>':`<p>Dry matter: <strong>${dryMatter}% as-fed</strong></p>`}
+ </div>
+ <button type="button" id="rwExcelAddName" class="x25-primary x25-secondary" ${compatible?'':'disabled'}>Add ingredients in the formulation</button>
+ <p class="x25-note">Copies matching nutrient values into Step 3. Enter your local ingredient price and any missing nutrient values. Total amino acids are not assumed to be digestible amino acids; RDP/RUP percentages of crude protein are not treated as feed percentages.</p>
+ <span id="rwExcelIngredientMessage" role="status">${compatible?'':'Choose an ingredient table suited to the selected animal first.'}</span>`;
+ $('rwExcelAddName').addEventListener('click',addWithValues);renderIngredients();
 }
-function addName(){
- const name=selectedIngredient?.name;if(!name)return;
- const tbody=$('prodIngredients');let inp=[...tbody.querySelectorAll('input[data-field="name"]')].find(x=>!x.value.trim());
- if(!inp){$('prodAdd').click();inp=[...tbody.querySelectorAll('input[data-field="name"]')].find(x=>!x.value.trim());}
- if(!inp){$('rwExcelIngredientMessage').textContent='No blank ingredient rows available.';return;}
- inp.value=name;inp.dispatchEvent(new Event('input',{bubbles:true}));
- $('rwExcelIngredientMessage').textContent='Ingredient name added. Enter verified dry matter, lab nutrients, local price and safety evidence before calculating.';
+function addWithValues(){
+ const rec=selectedIngredient;if(!rec||!wbTransfer)return;
+ const bridge=window.RationIngredientBridge,model=bridge?.getStage(),known=wbTransfer.declaredBasis(rec);
+ if(!bridge||!model){$('rwExcelIngredientMessage').textContent='Calculator not yet ready.';return;}
+ const basis=known||$('rwIngredientBasis')?.value||'';
+ const dmPct=wbTransfer.sourceDM(rec)??Number($('rwIngredientDryMatter')?.value||0);
+ const result=bridge.addFromWorkbook(rec,{basis,dmPct});
+ const message=$('rwExcelIngredientMessage');
+ if(!result.ok){message.textContent=result.error;return;}
+ const plan=window.RationCompleteUI?.getPlan();
+ const active=window.RationWorkbookIngredientTransfer.convert(rec,{group:model.group,basis,dmPct});
+ // The advanced nutrient table is repainted when a new ingredient row appears.
+ // Populate compatible total/digestible identities, never substitute one for the other.
+ setTimeout(()=>{
+  const i=result.rowIndex;
+  const inputs=[...document.querySelectorAll(`#rwCompleteAnalysis [data-i="${i}"][data-rw-nutrient]`)];
+  for(const input of inputs){const val=active.expanded[input.dataset.rwNutrient];if(Number.isFinite(val)){
+     input.value=String(Number(val.toFixed(6)));input.dispatchEvent(new Event('input',{bubbles:true}));
+  }}
+ },0);
+ const shown=result.matched.length;
+ const extra=plan?.b?.nutrients?.filter(n=>Number.isFinite(active.expanded[n.code])).length||0;
+ message.textContent=`Added ${rec.name} with ${shown} matching calculator nutrient value${shown===1?'':'s'}${extra?` and ${extra} extended nutrient values`:''}. Enter a price and any remaining required analyses before calculation. Source values are not a laboratory CoA or feeding approval.`;
 }
 iSearch.addEventListener('input',renderIngredients);
 iResults.addEventListener('click',e=>{const b=e.target.closest('[data-ingredient]');if(b)selectIngredient(b.dataset.ingredient);});
