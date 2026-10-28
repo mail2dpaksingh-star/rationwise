@@ -1,0 +1,18 @@
+.rw-ready{margin:14px 0 18px;padding:18px 20px;border:1px solid #a8d5ee;border-radius:15px;background:linear-gradient(120deg,#f0f9ff,#fff);color:#184d6c}
+.rw-ready-head{display:flex;justify-content:space-between;align-items:flex-start;gap:15px}
+.rw-ready h3{margin:0 0 6px;font-size:22px;color:#0c537b}.rw-ready p{font-size:13px;line-height:1.55;margin:5px 0 11px}
+.rw-ready-count{border:1px solid #a8d5ee;border-radius:30px;padding:7px 13px;background:#e1f3fe;font-weight:750;white-space:nowrap;color:#075985;font-size:12px}
+.rw-ready-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:13px 0}
+.rw-ready-edit{display:flex;flex-direction:column;gap:5px;font-weight:700;font-size:13px;color:#164e70}
+.rw-ready-edit input{width:100%;box-sizing:border-box;background:white;border:1px solid #8cbcd6;border-radius:9px;min-height:44px;padding:9px 12px;color:#143b59;font-size:16px}
+.rw-ready-edit small{font-size:11px;line-height:1.35;font-weight:400;color:#50778d}
+.rw-ready-apply{border:0;background:#0284c7;color:white;font-weight:750;border-radius:9px;padding:11px 14px;cursor:pointer}
+.rw-ready-list{margin-top:12px;border-top:1px solid #cfe8f7;padding-top:14px}.rw-ready-list strong{color:#164e70}
+.rw-ready-list ul{list-style:none;padding:0;margin:8px 0;display:grid;gap:6px}
+.rw-ready-list li button{width:100%;border:1px solid #d4e6f2;border-radius:8px;background:#fff;padding:10px 12px;text-align:left;font:inherit;font-size:13px;cursor:pointer;color:#214b66;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.rw-ready-list li button span{white-space:nowrap;font-weight:700;color:#0876ad}
+.rw-ready-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+.rw-ready-actions button{border:1px solid #8fbfdc;border-radius:9px;padding:10px 13px;font-weight:700;background:#eaf6fd;color:#075985;cursor:pointer}
+.rw-ready-notice{color:#0b6d50;font-weight:650}.rw-ready-info{font-weight:600;color:#1e6c65}
+@media(max-width:650px){.rw-ready{padding:12px}.rw-ready-head{flex-wrap:wrap}.rw-ready h3{font-size:19px}.rw-ready-list li button{align-items:flex-start;flex-direction:column;gap:4px}}
+@media print{.rw-ready{display:none!important}}
