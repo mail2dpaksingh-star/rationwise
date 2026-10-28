@@ -84,7 +84,20 @@ function capture(){
  return {ingredients:records,limits:[...plan.limits,...userLimits],batchKg,currency};
 }
 function showResults(res){const out=$('prodOutput');
- if(res.status!=='optimal'){out.innerHTML=`<div class="result-error"><strong>No feasible formulation</strong><p>${esc(res.explanation)}</p></div>`;return;}
+ if(res.status!=='optimal'){
+   const d=res.diagnostics;
+   const conflicts=d?.conflicts||[];
+   const rows=conflicts.slice(0,8).map(x=>`<tr><td>${esc(x.name)}</td><td>${x.mode==='min'?'At least':'At most'} ${fmt(x.target)} ${esc(x.unit)}</td><td>${fmt(x.reachableMin)}–${fmt(x.reachableMax)} ${esc(x.unit)}</td></tr>`).join('');
+   out.innerHTML=`<div class="result-error rw-guidance"><h3>We couldn't find a blend that meets all targets</h3>
+      <p>${esc(res.explanation||'Try adjusting the ingredient selection.')}</p>
+      ${conflicts.length?`<p>These nutrient targets cannot be reached with your current ingredients and their minimum/maximum inclusion limits:</p>
+      <div style="overflow-x:auto"><table class="rw-complete-table"><thead><tr><th>Nutrient</th><th>Required</th><th>Possible with these ingredients</th></tr></thead><tbody>${rows}</tbody></table></div>
+      ${conflicts.length>8?`<p>And ${conflicts.length-8} additional unmet targets.</p>`:''}`:
+      `<p>Each nutrient target may be reachable separately, but they conflict when combined in one blend. Check whether enough suitable ingredients are included and whether the minimum/maximum ingredient limits are too restrictive.</p>`}
+      <p><b>What to try:</b> Check ingredient nutrient values and units; add a suitable protein, energy, mineral or other ingredient as indicated; review justified inclusion limits; then calculate again. Never remove a nutritional requirement solely to force an answer.</p>
+      <p class="rw-complete-micro">These possible ranges are calculated one nutrient at a time; they are not a feed recipe or proof of nutritional suitability.</p></div>`;
+   return;
+ }
  out.innerHTML=`<section class="rw-complete-result"><p class="rw-complete-eyebrow">Nutrient-complete mathematical calculation</p><h2>Feed formulation</h2><div class="rw-result-highlight"><strong>${esc(res.currency)} ${fmt(res.totalCost)}</strong><span>Ingredient cost for ${fmt(res.batchKg)} kg as-fed</span></div><h3>Ingredient quantities</h3><table class="rw-complete-table"><thead><tr><th>Ingredient</th><th>Inclusion</th><th>As-fed kg</th><th>Cost</th></tr></thead><tbody>${res.rows.filter(r=>r.kgAF>1e-6).map(r=>`<tr><td>${esc(r.name)}</td><td>${fmt(r.sharePct)}%</td><td>${fmt(r.kgAF)}</td><td>${fmt(r.cost)}</td></tr>`).join('')}</tbody></table><h3>All calculated nutrient checks</h3><div class="rw-complete-table-wrap"><table class="rw-complete-table"><thead><tr><th>Nutrient</th><th>Required</th><th>Calculated</th></tr></thead><tbody>${res.checks.map(t=>`<tr><td>${esc(t.name)}</td><td>${t.mode==='min'?'≥':'≤'} ${fmt(t.value)} ${esc(t.unit)} ${t.basis==='dm'?'DM':'as-fed'}</td><td>${fmt(t.achieved)} ${esc(t.unit)}</td></tr>`).join('')}</tbody></table></div><p class="rw-complete-micro">Mathematical result based on user-entered ingredient analyses and supplied feeding-standard nutrient limits. Feed safety, micronutrient completeness and scientific approval are not certified by this calculator.</p><button type="button" id="rwCompleteExport" class="rw-complete-download">Export formulation CSV</button></section>`;
  $('rwCompleteExport').onclick=()=>{
   const values=[['RationWise calculation — user-entered data; feeding approval not verified'],['Source',plan.b.workbook,plan.b.sheet],['Currency',res.currency],['Ingredient','Inclusion %','kg AF','Cost'],...res.rows.map(r=>[r.name,r.sharePct,r.kgAF,r.cost]),[],['Nutrient','Direction','Limit','Achieved','Unit'],...res.checks.map(x=>[x.name,x.mode,x.value,x.achieved,x.unit])];

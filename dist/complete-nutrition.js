@@ -99,6 +99,59 @@ function build(profile){
  else if(!nutrients.some(n=>n.sourceCell===v.cell))notes.push({label:v.label,value:v.raw,cell:v.cell,reason:r.reason});}
  return {profileId:profile.id,name:profile.name,species:profile.species,models:profile.models,workbook:profile.workbook,sheet:profile.sheet,nutrients,context,notes};
 }
+// Explain why a mathematically valid ingredient set cannot meet the full requirement profile.
+// These are per-nutrient attainable bounds *under inclusion limits*, not a proposed diet.
+function feasibleShares(ingredients, objective, maximize){
+  const shares=ingredients.map(a=>a.min);
+  let left=100-shares.reduce((s,x)=>s+x,0);
+  if(left < -1e-7 || ingredients.reduce((s,a)=>s+a.max,0) < 100-1e-7)return null;
+  const indices=ingredients.map((_,i)=>i).sort((a,b)=>maximize?objective[b]-objective[a]:objective[a]-objective[b]);
+  for(const i of indices){const add=Math.min(Math.max(0,ingredients[i].max-shares[i]),Math.max(0,left));shares[i]+=add;left-=add;}
+  return left>1e-6?null:shares;
+}
+function achievedValue(limit,ingredients,shares){
+ const weighted=ingredients.reduce((sum,a,i)=>sum+shares[i]*a.dm/100*a.nutrients[limit.code],0);
+ if(limit.basis==='dm'){
+   const denominator=ingredients.reduce((sum,a,i)=>sum+shares[i]*a.dm/100,0);
+   return denominator>0?weighted/denominator:NaN;
+ }
+ return weighted/100;
+}
+function independentExtreme(limit,ingredients,maximize){
+ if(limit.basis!=='dm'){
+   const scores=ingredients.map(a=>a.dm/100*a.nutrients[limit.code]);
+   const shares=feasibleShares(ingredients,scores,maximize);
+   return shares?achievedValue(limit,ingredients,shares):NaN;
+ }
+ // Linear fractional objective. The Dinkelbach iterations solve the extreme
+ // concentration of nutrient per dry-matter mass with positive DM denominator.
+ let guess=ingredients.reduce((sum,a)=>sum+a.nutrients[limit.code],0)/ingredients.length;
+ for(let k=0;k<80;k++){
+   const scores=ingredients.map(a=>a.dm/100*(a.nutrients[limit.code]-guess));
+   const shares=feasibleShares(ingredients,scores,maximize);
+   if(!shares)return NaN;
+   const next=achievedValue(limit,ingredients,shares);
+   if(!Number.isFinite(next))return NaN;
+   if(Math.abs(next-guess)<1e-10*Math.max(1,Math.abs(next)))return next;
+   guess=next;
+ }
+ return guess;
+}
+function explainInfeasible(limits,ingredients){
+ const all=limits.map(t=>{
+  const low=independentExtreme(t,ingredients,false),high=independentExtreme(t,ingredients,true);
+  const tol=1e-6*Math.max(1,Math.abs(t.value));
+  const impossible=t.mode==='min'?high < t.value-tol:low > t.value+tol;
+  return {name:t.name,code:t.code,unit:t.unit,basis:t.basis,mode:t.mode,target:t.value,
+    reachableMin:low,reachableMax:high,impossible};
+ });
+ const conflicts=all.filter(x=>x.impossible).sort((a,b)=>{
+  const shortfall=x=>x.mode==='min'?(x.target-x.reachableMax):(x.reachableMin-x.target);
+  return shortfall(b)-shortfall(a);
+ });
+ return {conflicts,combinedConflict:conflicts.length===0,checked:all.length};
+}
+
 // Generic LP: supports all chosen source concentrations and both ends of a specified range.
 function optimize({limits,ingredients,batchKg=100,currency='USD'}={}){
  if(!Array.isArray(limits)||!limits.length)throw Error('Select a feeding standard with numerical nutrient limits.');
@@ -125,7 +178,7 @@ function optimize({limits,ingredients,batchKg=100,currency='USD'}={}){
  }
  if(!root.RationLP?.LPSolver)throw Error('Optimization library unavailable.');
  const r=new root.RationLP.LPSolver(A,b,ingredients.map(a=>-a.price)).solve();
- if(r.status!=='optimal')return {status:r.status,explanation:'No ingredient combination satisfies every selected nutritional limit. Nothing was relaxed.'};
+ if(r.status!=='optimal')return {status:r.status,explanation:'No blend meets all current nutrient targets and ingredient inclusion limits.',diagnostics:explainInfeasible(limits,ingredients)};
  const rows=ingredients.map((a,i)=>({name:a.name,kgAF:batchKg*(a.min+r.values[i])/100,sharePct:a.min+r.values[i],dmKg:batchKg*(a.min+r.values[i])*a.dm/10000,cost:batchKg*(a.min+r.values[i])*a.price/100}));
  const totalDM=rows.reduce((s,a)=>s+a.dmKg,0);
  const checks=limits.map(t=>{
@@ -136,6 +189,6 @@ function optimize({limits,ingredients,batchKg=100,currency='USD'}={}){
  if(checks.some(t=>!t.pass))throw Error('Independent nutrient check failed. No formula released.');
  return {status:'optimal',rows,checks,totalDM,totalCost:rows.reduce((s,r)=>s+r.cost,0),currency,batchKg};
 }
-const api={parseRange,classify,build,optimize};root.RationCompleteModel=api;
+const api={parseRange,classify,build,optimize,explainInfeasible};root.RationCompleteModel=api;
 if(typeof module!=='undefined'&&module.exports)module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);
