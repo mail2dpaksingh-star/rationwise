@@ -6,3 +6,17 @@
 .rw-lib-table-scroll{width:100%;max-width:100%;overflow-x:auto}.rw-lib-table{width:100%;border-collapse:collapse;min-width:520px;font-size:11px}.rw-lib-table th{text-align:left;font-weight:800;background:#f1f5ef;color:#356247;padding:8px;white-space:normal}.rw-lib-table td{padding:8px;border-bottom:1px solid #e6ede3;vertical-align:top}.rw-lib-controls{margin-top:14px}.rw-lib-ack{font-size:12px;display:flex;gap:9px;align-items:start;color:#6c5b32;margin:0 0 12px;line-height:1.5}.rw-lib-ack input{margin-top:3px;flex-shrink:0}.rw-lib-controls button{border:0;background:#1b5138;color:white;border-radius:9px;padding:11px 17px;font-size:13px;font-weight:800;cursor:pointer}.rw-lib-controls button:hover{background:#143e2b}.rw-lib-controls p{font-size:11px;line-height:1.6;color:#647968}.rw-lib-message{font-size:13px;color:#275535;font-weight:650;margin:13px 0 0;line-height:1.5}.rw-lib-message.rw-lib-error{color:#9e3631}.rw-lib-foot{border-top:1px solid #dce8d8;margin-top:15px;padding-top:12px;font-size:12px;color:#725b30;line-height:1.6}.rw-ingredient-shortcut{display:none!important}
 @media(max-width:810px){.rw-lib-top{display:block}.rw-lib-state{display:inline-block;margin-bottom:14px}.rw-lib-filters{grid-template-columns:1fr 1fr}.rw-lib-filters label:first-child{grid-column:1/-1}.rw-lib-layout{grid-template-columns:1fr}.rw-lib-results{max-height:245px}.rw-lib-details{padding:14px}}
 @media(max-width:440px){.rw-lib{padding:13px}.rw-lib-filters{grid-template-columns:1fr}.rw-lib-filters label:first-child{grid-column:auto}.rw-lib-top h4{font-size:19px}}
+
+/* Compact two-column presentation. Nutrient basis/review remains stored in the data. */
+.rw-lib-filters{grid-template-columns:minmax(0,2fr) minmax(150px,1fr)}
+.rw-lib-filters label[hidden],.rw-lib-foot[hidden]{display:none!important}
+.rw-lib-detail-header{margin-bottom:13px}
+.rw-lib-detail-header h5{margin-bottom:0}
+.rw-lib-table{min-width:0!important;width:100%;table-layout:fixed;font-size:13px}
+.rw-lib-table th:first-child,.rw-lib-table td:first-child{width:70%}
+.rw-lib-table th:last-child,.rw-lib-table td:last-child{width:30%;text-align:right}
+.rw-lib-table th,.rw-lib-table td{padding:11px 10px;overflow-wrap:anywhere}
+.rw-lib-number{font-variant-numeric:tabular-nums;font-weight:650}
+.rw-lib-detail-header span:not(.rw-lib-kicker){display:none}
+.rw-lib-ack{color:#284a62}
+@media(max-width:600px){.rw-lib-filters{grid-template-columns:1fr}.rw-lib-table{font-size:12px}.rw-lib-table th,.rw-lib-table td{padding:9px 6px}}
