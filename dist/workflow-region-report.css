@@ -37,3 +37,21 @@
  #rwPrintReport .rw-print-warning{font-size:9pt;padding-top:12px;border-top:1px solid #ccc;break-inside:avoid}
  #rwPrintReport tr{break-inside:avoid}
 }
+
+/* Always-visible, editable batch size for all formulation steps. */
+.rw-batch-bar{position:sticky;top:0;z-index:4;display:flex;flex-wrap:wrap;align-items:center;gap:14px;background:#e0f2fe;border:1px solid #9bd6f5;border-radius:14px;padding:12px 16px;margin:12px 0 14px;box-shadow:0 4px 16px #0b5b8630}
+.rw-batch-input{display:flex;flex-direction:column;gap:5px;min-width:145px;max-width:195px}
+.rw-batch-input label{color:#164e70;font-size:14px;font-weight:800}
+.rw-batch-input label span{font-weight:500;color:#396b84}
+.rw-batch-input input{box-sizing:border-box;width:100%;min-height:45px;border:2px solid #0284c7;border-radius:9px;padding:7px 12px;background:#fff;color:#123b5a;font-size:21px;font-weight:800}
+.rw-batch-input input:invalid{border-color:#c2410c;background:#fff7ed}
+.rw-batch-explain{display:flex;flex:1 1 240px;flex-direction:column;color:#305d77;line-height:1.4;font-size:12px;min-width:0}
+.rw-batch-explain strong{color:#164e70;font-size:14px}
+.rw-batch-edit-stage{background:#fff;color:#075985;border:1px solid #9fc9e4;padding:11px 13px;border-radius:9px;font-weight:700;cursor:pointer}
+.rw-batch-step-hint{color:#426a80;grid-column:1/-1;margin:0;font-size:13px}
+.rw-result-help{margin:12px 0 0;color:#37627d;line-height:1.55;font-size:13px}
+#rwSaveCalculated,#rwPrintButton{border:1px solid #0284c7;border-radius:10px;background:#0284c7;color:#fff;padding:11px 16px;font-weight:750;cursor:pointer}
+#rwPrintButton:disabled,#rwSaveCalculated:disabled{border-color:#c4d4df;background:#ebf1f5;color:#668094;cursor:not-allowed;opacity:1}
+#rwPrintButton:focus-visible,#rwSaveCalculated:focus-visible,#prodBatch:focus-visible{outline:3px solid #075985;outline-offset:2px}
+@media(max-width:580px){.rw-batch-bar{padding:9px 11px;gap:9px}.rw-batch-input{min-width:120px;max-width:155px}.rw-batch-explain{flex:1 1 120px;font-size:11px}.rw-batch-explain strong{font-size:12px}.rw-batch-edit-stage{padding:7px 10px;font-size:12px}}
+@media print{.rw-batch-bar{display:none!important}}

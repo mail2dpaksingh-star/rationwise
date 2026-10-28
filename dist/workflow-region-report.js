@@ -72,9 +72,22 @@ species.addEventListener('change',()=>{
 for(const id of ['prodBatch','prodBreed','prodAnimalContext','prodCurrency'])$(id)?.addEventListener('input',draw);
 $('rwExcelProfile')?.addEventListener('change',draw);
 $('rwExcelCards')?.addEventListener('click',()=>queueMicrotask(draw));
-// Never print a stale feed formula after an expanded nutrient input changes.
-$('rwCompleteAnalysis')?.addEventListener('input',()=>{out.innerHTML='<div class="result-empty">Nutrient values changed. Recalculate before printing.</div>';});
-function validResult(){return Boolean(out.querySelector('.rw-complete-result')||(out.querySelector('.result-hero')&&out.querySelector('#prodExport')));}
+// Provide save and print controls in a consistent place instead of inserting
+// them into the result only after optimization. A saved input workspace is not
+// a validated formulation; printing is possible only for a successful result.
+const printButton=$('rwPrintButton'),saveFormulaButton=$('rwSaveCalculated'),help=$('rwResultHelp');
+const validResult=()=>Boolean(out.querySelector('.rw-complete-result')||(out.querySelector('.result-hero')&&out.querySelector('#prodExport')));
+function refreshActions(){
+ const ready=validResult();
+ if(printButton){printButton.disabled=!ready;printButton.title=ready?'Print or save as a PDF using your browser':'Calculate a feasible formulation first';}
+ if(saveFormulaButton){saveFormulaButton.disabled=!ready;saveFormulaButton.title=ready?'Download the calculated ingredient quantities and nutrient checks':'Calculate a feasible formulation first';}
+ if(help)help.textContent=ready?'Calculation complete for '+fmt(Number(batch.value))+' kg as-fed. Save the ingredient quantities or print the formula below.':'Save inputs at any time. To print or save the actual formula, complete a successful calculation first.';
+}
+function invalidateCalculatedResult(){
+ if(validResult())out.innerHTML='<div class="result-empty">Inputs or batch size changed. Recalculate to update the ingredient quantities, costs and printable report.</div>';
+ report.hidden=true;
+ refreshActions();
+}
 function makePrintable(){
  if(!validResult())return;
  const result=out.querySelector('.rw-complete-result')||out;
@@ -93,17 +106,35 @@ function makePrintable(){
  </div><div class="rw-print-results"></div><p class="rw-print-warning">Numerical formulation based on supplied standards and user-entered ingredient analyses. Not an independently verified feeding or feed-safety approval. Check nutritional suitability, contaminants and local requirements before feeding.</p>`;
  report.querySelector('.rw-print-results').appendChild(r);
 }
-function printNow(){if(!validResult())return;makePrintable();report.hidden=false;window.print();}
-const observer=new MutationObserver(()=>{
+function printNow(){
  if(!validResult())return;
- if(out.querySelector('#rwPrintButton'))return;
- const btn=document.createElement('button');btn.type='button';btn.id='rwPrintButton';btn.className='rw-print-button';btn.textContent='Print formulation / Save as PDF';
- btn.addEventListener('click',printNow);
- const actions=out.querySelector('.result-actions')||out.querySelector('#rwCompleteExport')?.parentElement||out.querySelector('.rw-complete-result');
- actions?.appendChild(btn);
+ makePrintable();report.hidden=false;window.print();
+}
+function downloadCalculated(){
+ if(!validResult())return;
+ const calc=out.querySelector('#rwCompleteExport')||out.querySelector('#prodExport');
+ if(calc){calc.click();return;}
+}
+printButton?.addEventListener('click',printNow);
+saveFormulaButton?.addEventListener('click',downloadCalculated);
+$('rwEditAnimal')?.addEventListener('click',()=>{
+ const btn=document.querySelector('.rw25-progress-button[data-step="1"]');btn?.click();
+ $('prodSpecies')?.focus();
 });
+// The batch size is editable in every step, rather than buried in Step 1.
+// Recalculate after changing it: never print a previous solution under a new size.
+batch.addEventListener('input',()=>{invalidateCalculatedResult();draw();});
+batch.addEventListener('change',()=>{invalidateCalculatedResult();draw();});
+for(const id of ['prodSpecies','prodPriceUnit','prodCurrency','prodCountry','rwExcelProfile'])
+ $(id)?.addEventListener('change',invalidateCalculatedResult);
+for(const id of ['prodIngredients','prodTargets','rwCompleteAnalysis']){
+ const el=$(id);if(!el)continue;
+ el.addEventListener('input',invalidateCalculatedResult);
+ el.addEventListener('change',invalidateCalculatedResult);
+}
+const observer=new MutationObserver(refreshActions);
 observer.observe(out,{childList:true,subtree:true});
 window.addEventListener('afterprint',()=>{report.hidden=true;});
-draw();
-window.RationWiseWorkflow={regionFor,showSummary:draw,printReport:printNow};
+refreshActions();draw();
+window.RationWiseWorkflow={regionFor,showSummary:draw,printReport:printNow,refreshActions};
 })();
