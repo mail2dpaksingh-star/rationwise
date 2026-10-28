@@ -15,7 +15,29 @@
 <h1>Better feed.<br/><em>Clearer calculations.</em></h1>
 <p>Select your animal, explore stage-specific draft feeding references, add ingredient analyses and local prices, and calculate a least-cost feed blend.</p>
 <div class="rw25-hero-actions"><a class="rw25-solid" href="#production">Start calculation →</a></div>
-</div></section><section class="production rw25-formulator" id="production"><div class="rw25-wide"><div class="rw25-form-head"><div class="rw25-eyebrow">FEED FORMULATION</div><h2>Formulate animal feed</h2><p>Choose the animal, review draft nutrient references, supply verified ingredient data, and calculate. No farmer subscription is required.</p></div><div aria-label="Formulation steps" class="rw25-progress" role="tablist"><button aria-selected="true" class="rw25-progress-button active" data-step="1" type="button"><b>1</b><span>Animal &amp; batch</span></button><button aria-selected="false" class="rw25-progress-button" data-step="2" type="button"><b>2</b><span>Nutrient targets</span></button><button aria-selected="false" class="rw25-progress-button" data-step="3" type="button"><b>3</b><span>Ingredients &amp; prices</span></button><button aria-selected="false" class="rw25-progress-button" data-step="4" type="button"><b>4</b><span>Calculate &amp; export</span></button></div><div class="rw-batch-bar" id="rwBatchBar">
+</div></section>
+<section class="rw-expertise" id="rwExpertise" aria-labelledby="rwExpertiseTitle">
+  <div class="rw25-wide">
+    <div class="rw-expertise-head"><span class="rw-expertise-kicker">RATIONWISE · PRACTICAL ANIMAL NUTRITION</span><h2 id="rwExpertiseTitle">Explore our areas of expertise</h2></div>
+    <div class="rw-expertise-tabs" role="tablist" aria-label="Areas of expertise">
+      <button class="rw-expertise-tab" type="button" role="tab" id="rwExpertiseTabFormulate" aria-selected="true" aria-controls="rwExpertisePanelFormulate" tabindex="0">Feed Formulation</button>
+      <button class="rw-expertise-tab" type="button" role="tab" id="rwExpertiseTabQuality" aria-selected="false" aria-controls="rwExpertisePanelQuality" tabindex="-1">Feed Quality</button>
+      <button class="rw-expertise-tab" type="button" role="tab" id="rwExpertiseTabAdvisory" aria-selected="false" aria-controls="rwExpertisePanelAdvisory" tabindex="-1">Teaching &amp; Advisory</button>
+    </div>
+    <div class="rw-expertise-panel" role="tabpanel" id="rwExpertisePanelFormulate" aria-labelledby="rwExpertiseTabFormulate" tabindex="0">
+      <div><h3>Formulate feed with clear nutritional targets</h3><p>Explore stage-specific feeding requirements, ingredient analyses and local prices to build a least-cost formulation for your chosen animal and batch size.</p></div>
+      <a class="rw-expertise-action" href="#production">Start calculation <span aria-hidden="true">→</span></a>
+    </div>
+    <div class="rw-expertise-panel" role="tabpanel" id="rwExpertisePanelQuality" aria-labelledby="rwExpertiseTabQuality" tabindex="0" hidden>
+      <div><h3>Understand what goes into the feed</h3><p>Review ingredient composition, dry matter, nutrient measurements and potential quality gaps before including ingredients in a formulation.</p></div>
+      <a class="rw-expertise-action" href="#production" data-expertise-step="3">Explore ingredients <span aria-hidden="true">→</span></a>
+    </div>
+    <div class="rw-expertise-panel" role="tabpanel" id="rwExpertisePanelAdvisory" aria-labelledby="rwExpertiseTabAdvisory" tabindex="0" hidden>
+      <div><h3>Science informed by farming experience</h3><p>Learn about Dr. Surya Bahadur Singh’s teaching, feed-industry work and livestock-development experience behind RationWise.</p></div>
+      <a class="rw-expertise-action" href="#about-founder">Meet Dr. Singh <span aria-hidden="true">→</span></a>
+    </div>
+  </div>
+</section><section class="production rw25-formulator" id="production"><div class="rw25-wide"><div class="rw25-form-head"><div class="rw25-eyebrow">FEED FORMULATION</div><h2>Formulate animal feed</h2><p>Choose the animal, review draft nutrient references, supply verified ingredient data, and calculate. No farmer subscription is required.</p></div><div aria-label="Formulation steps" class="rw25-progress" role="tablist"><button aria-selected="true" class="rw25-progress-button active" data-step="1" type="button"><b>1</b><span>Animal &amp; batch</span></button><button aria-selected="false" class="rw25-progress-button" data-step="2" type="button"><b>2</b><span>Nutrient targets</span></button><button aria-selected="false" class="rw25-progress-button" data-step="3" type="button"><b>3</b><span>Ingredients &amp; prices</span></button><button aria-selected="false" class="rw25-progress-button" data-step="4" type="button"><b>4</b><span>Calculate &amp; export</span></button></div><div class="rw-batch-bar" id="rwBatchBar">
  <div class="rw-batch-input"><label for="prodBatch">Feed batch size <span>(kg, as-fed)</span></label>
  <input id="prodBatch" type="number" value="10" min="0.001" max="100000000" step="any" inputmode="decimal" aria-describedby="rwBatchHelp" required/>
  </div><div class="rw-batch-explain" id="rwBatchHelp"><strong>Choose any batch size</strong><span>Examples: 1, 10, 25, 50, 100 or 1,000 kg. The ingredient quantities and cost use this amount.</span></div>
@@ -195,7 +217,6 @@
 <div class="rw25-wide rw-founder-shell">
 <div class="rw-founder-profile">
 <p class="rw-founder-overline">OWNER &amp; ANIMAL NUTRITION SPECIALIST</p>
-<div aria-hidden="true" class="rw-founder-initials">SBS<span>✦</span></div>
 <h2 id="rw-founder-title">Dr. Surya Bahadur Singh</h2>
 <p class="rw-founder-subtitle">PhD · Animal Nutrition, Feed Formulation &amp; Livestock Development</p>
 <div class="rw-founder-country">Nepal · International livestock development experience</div>
@@ -206,11 +227,6 @@
 <p>Dr. Surya Bahadur Singh is an animal nutrition specialist whose career spans research, university teaching, feed manufacturing and livestock development. He completed postgraduate studies in animal nutrition and doctoral research at the University of Aberdeen, Scotland.</p>
 <p>At Nepal’s Cattle Feed and Carcass Utilization Project in Hetauda, he developed and balanced rations for dairy cattle, broilers, laying hens and pigs while strengthening feed-ingredient inspection and quality control. As a consultant to Everest Feed Industries, he developed stage-specific broiler and layer feeds, including formulations for different commercial poultry strains.</p>
 <p>He taught applied animal nutrition at the Institute of Agriculture and Animal Sciences in Rampur, prepared practical nutrition manuals, and helped livestock officers and farmers apply least-cost ration formulation. His advisory work has also supported livestock and rural-development initiatives in Nepal and other South Asian countries.</p>
-<div aria-label="Professional experience highlights" class="rw-founder-fields">
-<div><strong>Feed formulation</strong><span>Dairy cattle, poultry and pigs</span></div>
-<div><strong>Feed quality</strong><span>Ingredient assessment and mill practices</span></div>
-<div><strong>Teaching &amp; advisory</strong><span>Nutrition education and farmer-focused tools</span></div>
-</div>
 <p class="rw-founder-source">Profile adapted from Dr. Singh’s autobiography, <cite>From Open Skies to Distant Horizons: A Discourse with Destiny</cite>, particularly the chapters on Aberdeen, the Hetauda feed project, feed-industry consulting, and his teaching and publications.</p>
 <p class="rw-founder-science">RationWise provides mathematical formulation tools and draft feeding references; individual diets and source data still require appropriate independent review before animal feeding.</p>
 </div>
@@ -218,4 +234,4 @@
 </section><footer class="rw25-footer"><div class="rw25-wide rw25-footer-inner"><strong>Ration<span>Wise</span></strong><p>Owned by Dr. Surya Bahadur Singh · Free feed formulation tools · Scientific review required</p><div><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a></div></div></footer></main>
 <dialog id="auditDialog"><div class="modal-head"><div><div class="mini-title">SCIENTIFIC RECORD TRACE</div><h3 id="auditTitle"></h3></div><button aria-label="Close" class="close" id="closeDialog" type="button">×</button></div><div id="auditContent"></div></dialog><dialog id="pilotRecordDialog"><div class="modal-head"><div><div class="mini-title">SEPARATE ANALYSIS AND PRICE TRACE</div><h3 id="pilotRecordName"></h3></div><button aria-label="Close" class="close" id="pilotCloseRecord" type="button">×</button></div><div id="pilotRecordDetails"></div></dialog><script src="solver.js"></script><script src="units.js"></script><script src="science2.js"></script><script src="stages.js"></script><script src="engine2.js"></script><script src="quality4.js"></script><script src="review19.js"></script><script src="requirements17.js"></script><script src="reference18.js"></script><script src="operational.js"></script><script src="requirement-ui17.js"></script><script src="reference-ui18.js"></script><script src="review-ui19.js"></script><script src="scientific20.js"></script><script src="scientific-ui20.js"></script><script src="world-currencies.js"></script><script src="global21.js"></script><script src="global-ui21.js"></script><script src="standards-draft-data.js"></script><script src="standards-draft-ui.js"></script><script src="ingredient-library-data.js"></script>
 <script src="evidence-library.js"></script><script src="evidence-workbench.js"></script><script src="ingredient-library.js"></script><script src="excel-standards-data.js"></script><script src="workbook-ingredient-transfer.js"></script><script src="excel-standards-ui.js"></script><script src="complete-nutrition.js"></script><script src="complete-ui.js"></script>
-<script src="unified25.js"></script><div aria-label="Printable feed formulation report" hidden="" id="rwPrintReport"></div><script src="workflow-region-report.js"></script><script src="input-helper.js"></script></body></html>
+<script src="unified25.js"></script><script src="founder-tabs.js"></script><div aria-label="Printable feed formulation report" hidden="" id="rwPrintReport"></div><script src="workflow-region-report.js"></script><script src="input-helper.js"></script></body></html>
