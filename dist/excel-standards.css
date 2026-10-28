@@ -72,3 +72,9 @@
 .x25-inspector{margin-top:12px}
 @media(max-width:960px){.x25-animal-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.x25-match{grid-template-columns:1fr 1fr}.x25-match button{grid-column:1/-1}}
 @media(max-width:680px){.x25-animal-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.x25-animal{padding:10px 8px}.x25-animal.active{padding:9px 7px}.x25-animal-ico{width:30px;height:30px}.x25-advanced,.x25-refbar,.x25-match{grid-template-columns:1fr}.x25-profile-list{grid-template-columns:1fr}.x25-match button{grid-column:auto}.x25-head{align-items:flex-start}}
+
+/* Ingredient import: actionable regardless of source animal group. */
+.x25-source-fields label{display:block;margin:8px 0;font-weight:650;color:#235477}
+.x25-source-fields label input,.x25-source-fields label select{display:block;width:100%;margin-top:5px;min-height:40px;border:1px solid #b6d8ed;border-radius:8px;padding:8px;background:#fff;color:#123c57}
+.x25-add-message{display:block;color:#295d76;background:#eff8fe;border:1px solid #d2ebfb;border-radius:9px;padding:10px 12px;margin-top:10px;line-height:1.5;white-space:normal}
+.x25-view-ingredient:not([hidden]){display:inline-flex;align-items:center;margin-top:10px;border-radius:9px;border:1px solid #86c6ee;background:#fff;color:#16689d;font-weight:700;padding:9px 12px;cursor:pointer}

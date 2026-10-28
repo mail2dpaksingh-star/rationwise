@@ -12,9 +12,10 @@ function sourceGroup(rec){
 function applicable(rec,group){const g=sourceGroup(rec);return g===group||(g==='poultry_swine'&&(group==='poultry'||group==='swine'));}
 function declaredBasis(rec){return rec.sheet===ruminantSheet&&rec.workbook==='Feeding standards for ruminants.xlsx'?'dm':null;}
 function sourceDM(rec){const field=(rec.measurements||[]).find(m=>/^dm\s*%?$/.test(String(m.metric||'').trim().toLowerCase()));return field&&Number.isFinite(field.numeric)&&field.numeric>0&&field.numeric<=100?field.numeric:null;}
-function convert(rec,{group,basis,dmPct}={}){
+function convert(rec,{group,basis,dmPct,allowCommon=false}={}){
  if(!rec||!Array.isArray(rec.measurements))throw Error('Choose a source ingredient.');
- if(!applicable(rec,group))throw Error('This ingredient table does not describe the chosen animal group. Select the appropriate animal before adding it.');
+ const crossGroup=!applicable(rec,group);
+ if(crossGroup&&!allowCommon)throw Error('This ingredient table does not describe the chosen animal group. Select the appropriate animal before adding it.');
  const confirmed=declaredBasis(rec);
  if(confirmed&&basis&&basis!==confirmed)throw Error('This source expressly states dry-matter basis. Do not change it to as-fed.');
  const selectedBasis=confirmed||basis;
@@ -35,6 +36,9 @@ function convert(rec,{group,basis,dmPct}={}){
   const key=String(field.metric||'').trim().toLowerCase().replace(/\s+/g,' ').replace(/phosphorous/g,'phosphorus');
   const val=field.numeric;if(!Number.isFinite(val))continue;
   if(/^dm\s*%?$/.test(key))continue;
+  // For a different animal group, only general chemical composition is transferable.
+  // Published energy systems, TDN, digestibility and availability are species/model-specific.
+  if(crossGroup&&!(/^(?:cp|cf|ee|ca|p)\s*%?$/.test(key)))continue;
   if(/^cp\s*%?$/.test(key))set('Crude protein','cp',['crude_protein'],val);
   else if(/^cf\s*%?$/.test(key))set('Crude fiber','fiber',['crude_fiber'],val);
   else if(/^ndf\s*%?$/.test(key)&&group==='ruminant')set('NDF','ndf',['ndf_ruminant'],val);
@@ -63,9 +67,27 @@ function convert(rec,{group,basis,dmPct}={}){
   // RDP/RUP are percentages of crude protein, NOT dietary % DM; not copied as nutrient concentrations.
   // ADF, ash, NFC, etc remain visible in source table but do not match current optimizer constraints.
  }
- return {name:rec.name,dmPct:d,basis:selectedBasis,group,main,expanded,transferred,
+ return {name:rec.name,dmPct:d,basis:selectedBasis,group,main,expanded,transferred,scope:crossGroup?'shared_composition':'matched_animal',
    source:{id:rec.id,workbook:rec.workbook,sheet:rec.sheet,row:rec.row,rights:'not confirmed',review:'not independently verified'}};
 }
-const api={convert,declaredBasis,sourceDM,applicable,sourceGroup,kcalToMJ};root.RationWorkbookIngredientTransfer=api;
+function prepare(rec,{group,basis,dmPct}={}){
+ if(!rec||!Array.isArray(rec.measurements))throw Error('Choose a source ingredient.');
+ const explicit=declaredBasis(rec);
+ if(explicit&&basis&&basis!==explicit)throw Error('The source expressly states dry-matter basis.');
+ if(basis&&!['dm','as_fed'].includes(basis))throw Error('Choose dry-matter or as-fed source basis.');
+ const resolvedBasis=explicit||basis;
+ const source=sourceDM(rec);
+ const d=source??(dmPct===''||dmPct==null?null:Number(dmPct));
+ if(dmPct!=null&&dmPct!==''&&!Number.isFinite(Number(dmPct)))throw Error('Dry matter must be a number.');
+ if(d!==null&&!(d>0&&d<=100))throw Error('Dry matter must be greater than 0 and at most 100%.');
+ if(!resolvedBasis||d===null){
+   return {name:rec.name,dmPct:d,basis:resolvedBasis||null,group,main:{},expanded:{},transferred:[],
+     scope:applicable(rec,group)?'matched_animal':'shared_composition',
+     missing:[...(!resolvedBasis?['source basis']:[]),...(d===null?['dry matter']:[])],
+     source:{id:rec.id,workbook:rec.workbook,sheet:rec.sheet,row:rec.row,rights:'not confirmed',review:'not independently verified'}};
+ }
+ return {...convert(rec,{group,basis:resolvedBasis,dmPct:d,allowCommon:true}),missing:[]};
+}
+const api={convert,prepare,declaredBasis,sourceDM,applicable,sourceGroup,kcalToMJ};root.RationWorkbookIngredientTransfer=api;
 if(typeof module!=='undefined'&&module.exports)module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);

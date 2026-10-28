@@ -181,22 +181,39 @@ window.RationIngredientBridge=Object.freeze({
   const stage=STAGES[$('prodSpecies').value];
   if(!lib||!stage)return {ok:false,error:'Ingredient transfer or animal stage is unavailable.'};
   let result;
-  try{result=lib.convert(record,{group:stage.group,...config});}
+  try{result=lib.prepare(record,{group:stage.group,...config});}
   catch(e){return {ok:false,error:e.message};}
-  let row=ingredients.findIndex(a=>!a.name.trim());
-  if(row<0){if(ingredients.length>=60)return {ok:false,error:'Maximum 60 ingredients per formulation.'};ingredients.push(blank());row=ingredients.length-1;}
-  const a=blank();a.name=result.name;a.dm=String(result.dmPct);
-  a.libraryMeta={...result.source,basis:result.basis,notALaboratoryRecord:true};
-  a.expandedNutrients={...result.expanded};
+  const already=ingredients.findIndex(a=>a.libraryMeta?.id===result.source.id);
+  let row=already;
+  if(row<0){
+   row=ingredients.findIndex(a=>!a.name.trim());
+   if(row<0){if(ingredients.length>=60)return {ok:false,error:'Maximum 60 ingredients per formulation.'};ingredients.push(blank());row=ingredients.length-1;}
+  }
+  const a=already>=0?ingredients[row]:blank();
+  a.name=result.name;
+  if(result.dmPct!=null&&!String(a.dm).trim())a.dm=String(result.dmPct);
+  if(config.price!==undefined&&config.price!==null&&String(config.price).trim()!==''&&(!String(a.price).trim())){
+   const price=Number(config.price);
+   if(!Number.isFinite(price)||price<0)return {ok:false,error:'Price must be a nonnegative numeric amount.'};
+   a.price=String(price);
+  }
+  a.libraryMeta={...a.libraryMeta,...result.source,basis:result.basis,notALaboratoryRecord:true};
+  a.expandedNutrients=a.expandedNutrients||{};
+  const expanded=[];
+  for(const [key,value] of Object.entries(result.expanded)){
+   if(Number.isFinite(value)&&(a.expandedNutrients[key]===undefined||a.expandedNutrients[key]==='')){
+    a.expandedNutrients[key]=value;expanded.push(key);
+   }
+  }
   const matched=[];
-  for(const key of stage.keys){if(Number.isFinite(result.main[key])){
+  for(const key of stage.keys){if(Number.isFinite(result.main[key])&&(a.nutrients[key]===undefined||a.nutrients[key]==='')){
     a.nutrients[key]=String(Number(result.main[key].toFixed(6)));
     a.lineage[key]={source:result.source.id,workbook:result.source.workbook,sheet:result.source.sheet,row:result.source.row, status:'UNREVIEWED_SOURCE_VALUE',basis:'dry_matter',notMeasured:true};
     matched.push(key);
   }}
-  // Price, permission proof, hazard status and laboratory results are never invented.
+  // Never invent price, laboratory verification, rights proof or safety clearance.
   ingredients[row]=a;paint();clear();updatePreflight();
-  return {ok:true,rowIndex:row,matched,expanded:Object.keys(a.expandedNutrients),transferred:result.transferred,missing:stage.keys.filter(k=>!matched.includes(k))};
+  return {ok:true,already:already>=0,rowIndex:row,matched,expanded,transferred:result.transferred,missing:stage.keys.filter(k=>!matched.includes(k)),scope:result.scope,needs:result.missing||[]};
  },
  addFromEvidence(record,{copyValues=false}={}){
   const lib=window.RationEvidence;

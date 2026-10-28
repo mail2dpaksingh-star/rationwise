@@ -145,10 +145,12 @@ function selectIngredient(id){
  <div class="x25-table-wrap"><table class="x25-table"><thead><tr><th>Nutrient</th><th>Value</th></tr></thead><tbody>${rows}</tbody></table></div>
  <div class="x25-source-fields">${known?'<p>Source nutrient values: <strong>dry-matter basis</strong>.</p>':`<label>Nutrient values measured on<select id="rwIngredientBasis"><option value="">Choose basis…</option><option value="dm">Dry-matter basis</option><option value="as_fed">As-fed basis</option></select></label>`}
  ${dryMatter===null?'<label>Ingredient dry matter (%)<input id="rwIngredientDryMatter" type="number" min="0.01" max="100" step="any" placeholder="Enter dry matter %"/></label>':`<p>Dry matter: <strong>${dryMatter}% as-fed</strong></p>`}
+ <label>Local price (optional; current selected price unit)<input id="rwIngredientLocalPrice" type="number" inputmode="decimal" min="0" step="any" placeholder="Enter price now or in formulation table"/></label>
  </div>
- <button type="button" id="rwExcelAddName" class="x25-primary x25-secondary" ${compatible?'':'disabled'}>Add ingredients in the formulation</button>
- <p class="x25-note">Copies matching nutrient values into Step 3. Enter your local ingredient price and any missing nutrient values. Total amino acids are not assumed to be digestible amino acids; RDP/RUP percentages of crude protein are not treated as feed percentages.</p>
- <span id="rwExcelIngredientMessage" role="status">${compatible?'':'Choose an ingredient table suited to the selected animal first.'}</span>`;
+ <button type="button" id="rwExcelAddName" class="x25-primary">Add ingredient to formulation</button>
+ <p class="x25-note">Adds this ingredient to your formulation. Available matching composition values are copied; price and missing measurements can be completed in the ingredient table. Animal-specific energy or digestibility from a different species is never assumed.</p>
+ <div id="rwExcelIngredientMessage" class="x25-add-message" role="status">${compatible?'Ready to add ingredient and matching nutrient values.':'You can add this ingredient. General composition values can be copied when units are known; species-specific nutrients remain blank.'}</div>
+ <button type="button" id="rwExcelViewAdded" class="x25-view-ingredient" hidden>View ingredient in formulation ↓</button>`;
  $('rwExcelAddName').addEventListener('click',addWithValues);renderIngredients();
 }
 function addWithValues(){
@@ -156,25 +158,41 @@ function addWithValues(){
  const bridge=window.RationIngredientBridge,model=bridge?.getStage(),known=wbTransfer.declaredBasis(rec);
  if(!bridge||!model){$('rwExcelIngredientMessage').textContent='Calculator not yet ready.';return;}
  const basis=known||$('rwIngredientBasis')?.value||'';
- const dmPct=wbTransfer.sourceDM(rec)??Number($('rwIngredientDryMatter')?.value||0);
- const result=bridge.addFromWorkbook(rec,{basis,dmPct});
+ const dmPct=wbTransfer.sourceDM(rec)??($('rwIngredientDryMatter')?.value||null);
+ const price=$('rwIngredientLocalPrice')?.value||null;
+ const result=bridge.addFromWorkbook(rec,{basis,dmPct,price});
  const message=$('rwExcelIngredientMessage');
  if(!result.ok){message.textContent=result.error;return;}
  const plan=window.RationCompleteUI?.getPlan();
- const active=window.RationWorkbookIngredientTransfer.convert(rec,{group:model.group,basis,dmPct});
+ const active=window.RationWorkbookIngredientTransfer.prepare(rec,{group:model.group,basis,dmPct});
  // The advanced nutrient table is repainted when a new ingredient row appears.
  // Populate compatible total/digestible identities, never substitute one for the other.
  setTimeout(()=>{
   const i=result.rowIndex;
   const inputs=[...document.querySelectorAll(`#rwCompleteAnalysis [data-i="${i}"][data-rw-nutrient]`)];
-  for(const input of inputs){const val=active.expanded[input.dataset.rwNutrient];if(Number.isFinite(val)){
+  for(const input of inputs){const val=active.expanded[input.dataset.rwNutrient];if(!String(input.value).trim()&&Number.isFinite(val)){
      input.value=String(Number(val.toFixed(6)));input.dispatchEvent(new Event('input',{bubbles:true}));
   }}
  },0);
  const shown=result.matched.length;
  const extra=plan?.b?.nutrients?.filter(n=>Number.isFinite(active.expanded[n.code])).length||0;
- message.textContent=`Added ${rec.name} with ${shown} matching calculator nutrient value${shown===1?'':'s'}${extra?` and ${extra} extended nutrient values`:''}. Enter a price and any remaining required analyses before calculation. Source values are not a laboratory CoA or feeding approval.`;
+ const parts=[];
+ if(result.already)parts.push(`${rec.name} is already in the formulation; newly supplied measurements were added without replacing your edits.`);
+ else parts.push(`Added ${rec.name} to formulation (${document.querySelectorAll('#prodIngredients tr').length} ingredient rows).`);
+ parts.push(`${shown+extra} matching nutrient field${shown+extra===1?'':'s'} populated or available.`);
+ if(result.scope==='shared_composition')parts.push('Only general composition values were copied from this other animal-group source; enter the selected species’ energy and digestible nutrients separately.');
+ if(result.needs.length)parts.push('For nutrient transfer, enter '+result.needs.join(' and ')+'; the ingredient name has already been added.');
+ parts.push('Complete the local price and any remaining nutrient analyses before calculating.');
+ message.textContent=parts.join(' ');
+ const view=$('rwExcelViewAdded');view.hidden=false;
+ view.onclick=()=>{
+    const tab=document.querySelector('[data-step="3"]');if(tab)tab.click();
+    const row=document.querySelectorAll('#prodIngredients tr')[result.rowIndex];
+    row?.scrollIntoView({behavior:'smooth',block:'center'});
+    row?.querySelector('[data-field="price"]')?.focus({preventScroll:true});
+ };
 }
+$('prodSpecies').addEventListener('change',()=>{if(selectedIngredient)selectIngredient(selectedIngredient.id);});
 iSearch.addEventListener('input',renderIngredients);
 iResults.addEventListener('click',e=>{const b=e.target.closest('[data-ingredient]');if(b)selectIngredient(b.dataset.ingredient);});
 renderAnimals();renderBreeds();renderOptions();renderIngredients();
