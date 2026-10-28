@@ -79,9 +79,14 @@ const printButton=$('rwPrintButton'),saveFormulaButton=$('rwSaveCalculated'),hel
 const validResult=()=>Boolean(out.querySelector('.rw-complete-result')||(out.querySelector('.result-hero')&&out.querySelector('#prodExport')));
 function refreshActions(){
  const ready=validResult();
- if(printButton){printButton.disabled=!ready;printButton.title=ready?'Print or save as a PDF using your browser':'Calculate a feasible formulation first';}
+ if(printButton){printButton.disabled=false;printButton.title=ready?'Print or save this calculated formulation as a PDF':'Calculate the current inputs and print the formulation if feasible';}
  if(saveFormulaButton){saveFormulaButton.disabled=!ready;saveFormulaButton.title=ready?'Download the calculated ingredient quantities and nutrient checks':'Calculate a feasible formulation first';}
- if(help)help.textContent=ready?'Calculation complete for '+fmt(Number(batch.value))+' kg as-fed. Save the ingredient quantities or print the formula below.':'Save inputs at any time. To print or save the actual formula, complete a successful calculation first.';
+ if(help){
+  const issue=out.querySelector('.result-error');
+  help.textContent=ready?'Calculation complete for '+fmt(Number(batch.value))+' kg as-fed. Save the ingredient quantities or print the formula below.'
+   :issue?'Cannot print a formulation yet. '+issue.textContent.replace(/\s+/g,' ').trim()
+   :'Print formulation will first calculate the current inputs. If anything is missing or infeasible, the result area will explain what needs attention. You can save inputs at any time.';
+ }
 }
 function invalidateCalculatedResult(){
  if(validResult())out.innerHTML='<div class="result-empty">Inputs or batch size changed. Recalculate to update the ingredient quantities, costs and printable report.</div>';
@@ -107,7 +112,22 @@ function makePrintable(){
  report.querySelector('.rw-print-results').appendChild(r);
 }
 function printNow(){
- if(!validResult())return;
+ // A visible print button should actually respond. Calculate synchronously from
+ // the current inputs first, and print only if there is a genuine feasible result.
+ if(!validResult()){
+  const calculateButton=$('prodCalculate');
+  if(!calculateButton){
+   if(help)help.textContent='Calculation is unavailable. Reload the page and try again.';
+   return;
+  }
+  calculateButton.click();
+  if(!validResult()){
+   const message=out.querySelector('.result-error')?.textContent?.replace(/\s+/g,' ').trim();
+   if(help)help.textContent='Cannot print a formulation yet. '+(message||'Complete the required ingredient analyses, nutrient targets and prices, then try again.');
+   if(out.scrollIntoView)out.scrollIntoView({behavior:'smooth',block:'nearest'});
+   return;
+  }
+ }
  makePrintable();report.hidden=false;window.print();
 }
 function downloadCalculated(){
