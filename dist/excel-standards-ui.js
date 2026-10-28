@@ -55,7 +55,12 @@ function showProfile(){
  if(window.RationCompleteUI)window.RationCompleteUI.select(p);
  $('rwExcelMatch').hidden=!p;
  if(!p){inspector.innerHTML='<p class="x25-muted">Choose a stage from the cards or stage dropdown to view its source, nutrients and suitability.</p>';markTransferStatus();return;}
- const tr=p.values.map(v=>`<tr><td>${safe(v.label)}</td><td><b>${safe(v.raw)}</b> ${safe(v.unit)}</td></tr>`).join('');
+ const displayUnit=v=>{const direct=String(v.unit||'').trim();if(direct)return direct;const label=String(v.label||'');
+  if(/%/.test(label))return '%';if(/\bkg\/day\b/i.test(label))return 'kg/day';
+  if(/\bkcal\/kg\b/i.test(label))return 'kcal/kg';if(/\bMJ\/kg\b/i.test(label))return 'MJ/kg';
+  if(/\bmg\/kg\b/i.test(label))return 'mg/kg';if(/\bg\/day\b/i.test(label))return 'g/day';
+  if(/\bbody weight[, ]+kg\b/i.test(label))return 'kg';return 'unit not supplied';};
+ const tr=p.values.map(v=>`<tr><td>${safe(v.label)}</td><td><b>${safe(v.raw)}</b> <span class="x25-unit">${safe(displayUnit(v))}</span></td></tr>`).join('');
  inspector.innerHTML=`<div class="x25-source"><strong>${safe(p.name)}</strong><span>${safe(p.species)} · ${p.values.length} source measurements</span><span>Source: ${safe(p.workbook)} · ${safe(p.sheet)} · ${safe(p.headCell)}</span></div>
  <div class="x25-table-wrap"><table class="x25-table"><thead><tr><th>Feeding-standard measurement</th><th>Value</th></tr></thead><tbody>${tr}</tbody></table></div>
  <p class="x25-note">The complete calculation below uses nutrient concentrations where the worksheet gives interpretable values and units. Animal intake and feeding-period measurements are shown separately. Original source data still require independent nutritional validation.</p>`;
@@ -68,12 +73,12 @@ function renderOptions(){
  const choices=available();const before=selectedProfile?.id;
  profileSelect.innerHTML='<option value="">Select animal / breed / weight / production stage…</option>'+choices.map(p=>`<option value="${safe(p.id)}">${safe(p.name)}</option>`).join('');
  const count=choices.length;
- $('rwExcelCount').textContent=`${profiles.length} stage references · ${db.sourceCount} Excel workbooks`;
+ $('rwExcelCount').textContent=`${profiles.length} stage references · ${db.sourceCount} source workbooks`;
  $('rwExcelMatchCount').textContent=`${count} reference stage${count===1?'':'s'} found`;
  $('rwExcelBrowseInfo').textContent=animal==='all'?'Browse all animal groups and available feeding standards.':`${categories.find(x=>x[0]===animal)?.[1]||animal}: ${count?'choose a breed and production stage':'no matching workbook entry; enter verified targets manually'}`;
  $('rwExcelCards').innerHTML=choices.slice(0,visibleLimit).map(p=>{
   const count=p.values.filter(v=>v.mapping).length;return `<button type="button" data-profile="${safe(p.id)}" class="x25-card ${before===p.id?'picked':''}"><span class="x25-card-title">${safe(p.name)}</span><span class="x25-card-foot"><span>${safe(p.sheet)} · ${safe(p.stage)}</span><span class="x25-state ${p.models.length?'':'muted'}">${p.models.length?`${count} nutrient fields`:'Browse standards'}</span></span></button>`;
- }).join('')||(animal==='buffalo'||animal==='sheep'?'<div class="x25-empty"><b>No dedicated values in these Excel workbooks yet.</b> This animal remains supported in the calculator, but requires its own verified nutrient targets. Cattle or goat standards will not be copied automatically.</div>':'<div class="x25-empty">No references match your filters. Try a different breed, animal group or search term.</div>');
+ }).join('')||(animal==='buffalo'||animal==='sheep'?'<div class="x25-empty"><b>No dedicated values in these source workbooks yet.</b> This animal remains supported in the calculator, but requires its own verified nutrient targets. Cattle or goat standards will not be copied automatically.</div>':'<div class="x25-empty">No references match your filters. Try a different breed, animal group or search term.</div>');
  $('rwExcelMore').hidden=count<=visibleLimit;
  $('rwExcelMore').textContent=`Show more stages (${count-visibleLimit} remaining)`;
  const stillThere=choices.find(p=>p.id===before);
@@ -114,7 +119,7 @@ function apply(){
   for(const el of [inp,direction,basis])el.dispatchEvent(new Event('change',{bubbles:true}));
   copied++;copiedKeys.add(m.key);
  }
- const src=$('prodRequirementSource');if(src){src.value=`Excel: ${p.workbook} | ${p.sheet} | stage ${p.headCell} [UNREVIEWED]`;src.dispatchEvent(new Event('change',{bubbles:true}));}
+ const src=$('prodRequirementSource');if(src){src.value=`Source: ${p.workbook} | ${p.sheet} | stage ${p.headCell} [UNREVIEWED]`;src.dispatchEvent(new Event('change',{bubbles:true}));}
  const missing=model.keys.filter(k=>!copiedKeys.has(k));
  report.textContent=`${copied} matching target${copied===1?'':'s'} copied. ${missing.length} additional required field${missing.length===1?'':'s'} still BLANK: ${missing.map(k=>units[k]?.name||k).join(', ')}. This is not a certified feeding formulation.`;
  report.scrollIntoView({block:'nearest',behavior:'smooth'});

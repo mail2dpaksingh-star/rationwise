@@ -16,7 +16,7 @@ function parseRange(s){
 function classify(profile,v){
  const label=String(v.label||'').toLowerCase().replace(/[†‡*]/g,'').replace(/phosphorous/g,'phosphorus');
  const unit=String(v.unit||'').toLowerCase();
- if(v.issue&&/date serial|corrupt|misformatted/i.test(v.issue))return {kind:'source',reason:'Check original Excel cell'};
+ if(v.issue&&/date serial|corrupt|misformatted/i.test(v.issue))return {kind:'source',reason:'Check original source cell'};
  const raw=String(v.raw??'');const vals=parseRange(raw);
  const meta=/body weight|milk\s*,?\s*kg|age,|days in milk|parity|days pre|weight gain|body wt gain|daily gain|feed structure|feeding period|feed intake|estimated feed|dmi|dry matter intake|production stage|gestation day|feed consumption|fat%|fat % in milk|milk production|feed amount|maturity|intake \+ wastage|litter|post-farrowing/i.test(label);
  if(meta)return {kind:'context',reason:'Animal or feeding information'};
